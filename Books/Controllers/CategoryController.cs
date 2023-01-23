@@ -8,7 +8,7 @@ namespace Books.Controllers
     {
 
         private readonly ApplicationDbContext _db;
-        
+
         public CategoryController(ApplicationDbContext db)
         {
             //This db will have all the implementation of connection strings, tables in order to retrieve data.
@@ -32,7 +32,7 @@ namespace Books.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category obj)
         {
-            if(obj.Name == obj.DisplayOrder.ToString())
+            if (obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("name", "Error with Display order");
             }
@@ -48,36 +48,71 @@ namespace Books.Controllers
         //Edit 
         public IActionResult Edit(int? id)
         {
-            if(id == null && id == 0)
+            if (id == null && id == 0)
             {
                 return NotFound();
             }
             var categoryFromDb = _db.Categories.Find(id);
             //var vategoryFromDbFirst = _db.Categories.FirstOrDefault(u => u.Id == id);
             //var vategoryFromDbSingle = _db.Categories.SingleOrDefault(u => u.Id == id);
-            if(categoryFromDb == null)
+            if (categoryFromDb == null)
             {
                 return NotFound();
             }
             return View(categoryFromDb);
         }
 
-        ////Delete
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(Category obj)
-        //{
-        //    if (obj.Name == obj.DisplayOrder.ToString())
-        //    {
-        //        ModelState.AddModelError("name", "Error with Display order");
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
-        //        _db.Categories.Add(obj);
-        //        _db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(obj);
-        //}
+        //Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Category obj)
+        {
+            if (obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("name", "Error with Display order");
+            }
+            if (ModelState.IsValid)
+            {
+                _db.Categories.Update(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
+
+        //Delete 
+        public IActionResult Delete(int? id)
+        {
+            if (id == null && id == 0)
+            {
+                return NotFound();
+            }
+            var categoryFromDb = _db.Categories.Find(id);
+            //var vategoryFromDbFirst = _db.Categories.FirstOrDefault(u => u.Id == id);
+            //var vategoryFromDbSingle = _db.Categories.SingleOrDefault(u => u.Id == id);
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(categoryFromDb);
+        }
+
+        //Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePOST(int? id)
+        {
+            var obj = _db.Categories.Find(id);
+            if(obj.Id != null)
+            {
+                return NotFound();
+            }
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
     }
 }
