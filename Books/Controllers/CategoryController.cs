@@ -40,6 +40,7 @@ namespace Books.Controllers
             {
                 _db.Categories.Add(obj);
                 _db.SaveChanges();
+                TempData["success"] = "Category created!";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -75,6 +76,7 @@ namespace Books.Controllers
             {
                 _db.Categories.Update(obj);
                 _db.SaveChanges();
+                TempData["success"] = "Category edit!";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -98,17 +100,18 @@ namespace Books.Controllers
         }
 
         //Delete
-        [HttpPost]
+        [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeletePOST(int? id)
+        public IActionResult DeletePOST(int id)
         {
             var obj = _db.Categories.Find(id);
-            if(obj.Id != null)
+            if(obj.Id == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
+            _db.Categories.Remove(obj); 
             _db.SaveChanges();
+            TempData["success"] = "Category deleted!";
             return RedirectToAction("Index");
         }
 

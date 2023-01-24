@@ -3,6 +3,9 @@
     ViewData["Title"] = "Index";
 }
 
+
+
+<partial name="_Notification" />
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
@@ -41,7 +44,7 @@
                 <td>
                     <div class="w-75 btn-group" role="group">
                         <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id" class="btn-primary mx-2"> Edit </a>
-                            <a asp-controller="Category" asp-action="DeletePOST" asp-route-id="@obj.Id" class="btn-danger mx-2"> Delete </a>
+                            <a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id" class="btn-danger mx-2"> Delete </a>
                     </div>
                 </td>
             </tr>
