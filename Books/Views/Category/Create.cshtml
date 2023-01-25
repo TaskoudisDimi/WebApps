@@ -2,7 +2,7 @@
 
 
 
-<form method="post">
+<form method="post" asp-action="Create">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">
@@ -30,8 +30,8 @@
 
 
 @*Only in client validation*@
-@section Scripts{
+@*@section Scripts{
     @{
         <partial name="_ValidationScriptPartial" />
     }
-}
+}*@

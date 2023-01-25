@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Books</title>
     <link rel="stylesheet" href="~/css/BootStrapTheme.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <link rel="stylesheet" href="~/Books.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -37,6 +38,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>
