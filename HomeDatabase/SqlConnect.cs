@@ -8,21 +8,60 @@ namespace HomeDatabase
     {
 
         public static string conStr;
+        private static SqlConnection con = new SqlConnection();
+        
+        public DataTable table = new DataTable();
 
-        public static SqlConnection GetConnection()
+        public SqlConnect()
+        {
+            if(con.State != ConnectionState.Open)
+                con.ConnectionString = conStr;
+            
+        }
+
+        public void OpenCon()
         {
             try
             {
-                SqlConnection connection = new SqlConnection(conStr);
-                return connection;
+                con.Open();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine(ex.Message);
             }
         }
 
+        private static void CloseCon()
+        {
+            try
+            {
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void retrieveData(string command)
+        {
+            try
+            {
+                
+                SqlDataAdapter adapter = new SqlDataAdapter(command, con);
+                adapter.Fill(table);
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                CloseCon();
+            }
+        }
 
 
 

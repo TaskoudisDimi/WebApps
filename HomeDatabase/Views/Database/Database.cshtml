@@ -1,7 +1,27 @@
-﻿@{
+﻿@model List<HomeDatabase.Models.Servers>
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Database</h1>
 </div>
+
+<a class="btn btn-primary mt-1" asp-area="" asp-page="" >Create new Table</a>
+<a class="btn btn-primary mt-1" asp-area="" asp-page="" >Create new Row</a>
+
+<ul>
+    @foreach(var server in Model){
+
+        <li>@server.Id  @server.Name </li>
+         <a class="btn btn-primary mt-1" asp-area="" asp-page="" 
+                        asp-route-Name="@server.Name"
+                        asp-route-Id="@server.Id">Edit!</a>
+         <a class="btn btn-primary mt-1" asp-area="" asp-page="" 
+                        asp-route-Name="@server.Name"
+                        asp-route-Id="@server.Id">Delete!</a>
+    
+    }
+</ul>

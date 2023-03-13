@@ -5,11 +5,14 @@ namespace HomeDatabase
 {
     public class Startup
     {
+        SqlConnect connect;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             
-            SqlConnect.conStr = ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
+            SqlConnect.conStr = ConfigurationExtensions.GetConnectionString(this.Configuration, "Home");
+            connect = new SqlConnect();
+            connect.OpenCon();
         }
 
         public IConfiguration Configuration { get; }
