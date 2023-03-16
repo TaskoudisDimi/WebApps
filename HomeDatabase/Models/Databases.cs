@@ -1,8 +1,8 @@
 ﻿namespace HomeDatabase.Models
 {
-    public class Servers
+    public class Databases
     {
-        public int Id { get; set; } 
         public string Name { get; set; }
+
     }
 }

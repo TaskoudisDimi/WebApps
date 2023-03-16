@@ -1,4 +1,4 @@
-﻿@model List<HomeDatabase.Models.Servers>
+﻿@model List<HomeDatabase.Models.Databases>
 
 
 @{
@@ -13,15 +13,13 @@
 <a class="btn btn-primary mt-1" asp-area="" asp-page="" >Create new Row</a>
 
 <ul>
-    @foreach(var server in Model){
+    @foreach(var databases in Model){
 
-        <li>@server.Id  @server.Name </li>
          <a class="btn btn-primary mt-1" asp-area="" asp-page="" 
-                        asp-route-Name="@server.Name"
-                        asp-route-Id="@server.Id">Edit!</a>
-         <a class="btn btn-primary mt-1" asp-area="" asp-page="" 
-                        asp-route-Name="@server.Name"
-                        asp-route-Id="@server.Id">Delete!</a>
+                        asp-route-Name="@databases.Name"
+                        asp-route-Id=""><li>@databases.Name</li></a>
+         
+       
     
     }
 </ul>

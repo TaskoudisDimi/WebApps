@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using HomeDatabase.Models;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
@@ -64,6 +65,36 @@ namespace HomeDatabase
         }
 
 
+        //Get Databases
+        public List<Databases> GetDatabaseList()
+        {
+            List<Databases> list = new List<Databases>();
+
+            // Open connection to the database
+            string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
+
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                con.Open();
+
+                // Set up a command with the given query and associate
+                // this with the current connection.
+                using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
+                {
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Databases databases = new Databases();
+                            databases.Name = reader["Name"].ToString();
+                            list.Add(databases);
+                        }
+                    }
+                }
+            }
+            return list;
+
+        }
 
 
 
