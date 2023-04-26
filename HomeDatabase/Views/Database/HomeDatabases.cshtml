@@ -1,0 +1,21 @@
+﻿@model List<HomeDatabase.Models.Databases>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Databases</h1>
+</div>
+
+<a class="btn btn-primary mt-1" asp-area="" asp-page="Test" >Create new Database</a>
+<a class="btn btn-primary mt-1" asp-area="" asp-page="" >Delete Database</a>
+
+<ul>
+    @foreach(var databases in Model){
+         <a class="btn btn-primary mt-1" asp-area="" asp-page="" 
+                        asp-route-Name="@databases.Name">@databases.Name</a>
+         
+    }
+</ul>
