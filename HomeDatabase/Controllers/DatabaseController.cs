@@ -21,5 +21,10 @@ namespace HomeDatabase.Controllers
             List<Databases> databases = loaddata.GetDatabaseList();
             return View(databases);
         }
+
+        public IActionResult Table()
+        {
+            return View("TableDatabase");
+        }
     }
 }
