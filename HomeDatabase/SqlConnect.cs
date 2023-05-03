@@ -71,7 +71,8 @@ namespace HomeDatabase
             List<Databases> list = new List<Databases>();
 
             // Open connection to the database
-            string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
+            //string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
+            string conString = "server=192.168.24.177,51434;database=Home;Integrated Security=SSPI;TrustServerCertificate=True";
 
             using (SqlConnection con = new SqlConnection(conString))
             {
@@ -96,7 +97,19 @@ namespace HomeDatabase
 
         }
 
+        public void execCom(string cmd)
+        {
+            OpenCon();
+            try
+            {
+                SqlCommand command = new SqlCommand(cmd, con);
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
 
+            }
+        }
 
 
     }
