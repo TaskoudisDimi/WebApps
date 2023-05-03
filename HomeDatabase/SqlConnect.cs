@@ -68,8 +68,7 @@ namespace HomeDatabase
         //Get Databases
         public List<Databases> GetDatabaseList()
         {
-            List<Databases> list = new List<Databases>();
-
+            List<Databases> listDB = new List<Databases>();
             // Open connection to the database
             //string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
             string conString = "server=192.168.24.177,51434;database=Home;Integrated Security=SSPI;TrustServerCertificate=True";
@@ -88,13 +87,14 @@ namespace HomeDatabase
                         {
                             Databases databases = new Databases();
                             databases.Name = reader["Name"].ToString();
-                            list.Add(databases);
+                            if(!databases.Name.Contains("master") && !databases.Name.Contains("tempdb") && !databases.Name.Contains("model") &&
+                                !databases.Name.Contains("msdb"))
+                            listDB.Add(databases);
                         }
                     }
                 }
             }
-            return list;
-
+            return listDB;
         }
 
         public void execCom(string cmd)

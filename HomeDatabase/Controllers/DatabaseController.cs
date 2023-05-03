@@ -15,15 +15,16 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
-        public IActionResult Database()
+        public IActionResult HomeDatabases()
         {
             SqlConnect loaddata = new SqlConnect();
-            loaddata.retrieveData("Select * From Servers");
-
             List<Databases> databases = loaddata.GetDatabaseList();
-
             return View(databases);
         }
 
+        public IActionResult Table()
+        {
+            return View("TableDatabase");
+        }
     }
 }
