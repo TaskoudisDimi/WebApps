@@ -3,14 +3,19 @@
 *@
 @{
 }
-<a class="btn btn-primary mt-1" asp-area="" asp-page="" >Create new Database</a>
-<a class="btn btn-primary mt-1" asp-area="" asp-page="" >Delete Database</a>
+<a class="btn btn-primary mt-1" asp-area="" asp-page="">Create new Database</a>
+<a class="btn btn-primary mt-1" asp-area="" asp-page="">Delete Database</a>
 
 <ul>
     @foreach (var databases in Model)
     {
-        <li><a class="btn btn-primary mt-1" asp-area="" asp-action="Table" asp-controller="Database"
-             asp-route-Name="@databases.Name">@databases.Name</a>
-        </li>
+        if (databases.Name != null)
+        {
+            <li>
+                <a class="btn btn-primary mt-1" asp-area="" asp-action="Tables" asp-controller="Database"
+           asp-route-Name="@databases.Name">@databases.Name</a>
+            </li>
+        }
+
     }
 </ul>

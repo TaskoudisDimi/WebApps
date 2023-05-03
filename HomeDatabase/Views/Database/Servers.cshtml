@@ -1,0 +1,29 @@
+﻿@model List<Servers>
+
+<h1>Servers</h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="" asp-controller="Servers">Create new server</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var server in Model)
+        {
+            <tr>
+                <td>@server.Id</td>
+                <td>@server.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

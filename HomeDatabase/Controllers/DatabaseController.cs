@@ -22,9 +22,10 @@ namespace HomeDatabase.Controllers
             return View(databases);
         }
 
-        public IActionResult Table()
+        public IActionResult Tables()
         {
-            return View("TableDatabase");
+            return RedirectToAction("Index", "Servers");
+            
         }
     }
 }
