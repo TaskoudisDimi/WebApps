@@ -27,10 +27,5 @@ namespace Dog.Controllers
             //return View("Index");
         }
 
-
-        public String Hello()
-        {
-            return "Who's there?";
-        }
     }
 }
