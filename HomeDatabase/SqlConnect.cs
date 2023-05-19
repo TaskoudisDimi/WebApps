@@ -1,5 +1,6 @@
 ﻿using HomeDatabase.Models;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Data;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
@@ -89,13 +90,43 @@ namespace HomeDatabase
                             databases.Name = reader["Name"].ToString();
                             if(!databases.Name.Contains("master") && !databases.Name.Contains("tempdb") && !databases.Name.Contains("model") &&
                                 !databases.Name.Contains("msdb"))
-                            listDB.Add(databases);
+                                listDB.Add(databases);
                         }
                     }
                 }
             }
             return listDB;
         }
+
+        //Get Tables
+        public List<TableViewModel> GetTables()
+        {
+            List<TableViewModel> listServers = new List<TableViewModel>();
+            string conString = "server=192.168.24.177,51434;database=Home;Integrated Security=SSPI;TrustServerCertificate=True";
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                con.Open();
+
+                // Set up a command with the given query and associate
+                // this with the current connection.
+                using (SqlCommand cmd = new SqlCommand("use Home\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ", con))
+                {
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            TableViewModel databases = new TableViewModel();
+                            databases.TableName = reader["TABLE_NAME"].ToString();
+                            listServers.Add(databases);
+                        }
+                    }
+                }
+            }
+
+            return listServers;
+        }
+
+
 
         public void execCom(string cmd)
         {

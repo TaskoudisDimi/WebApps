@@ -1,7 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to my HomeDatabase</h1>
-</div>
+<a class="btn btn-primary mt-1" asp-area="" asp-page="">Create new Table</a>
+<a class="btn btn-primary mt-1" asp-area="" asp-page="">Delete Table</a>
+
+<ul>
+    @foreach (var tables in Model)
+    {
+        string modelName = "";
+        if (tables.TableName != null)
+        {
+            if (tables.TableName == "Servers")
+            {
+                modelName = "Servers";
+            }
+            <li>
+                <a class="btn btn-primary mt-1" asp-area="" asp-action="Index" asp-controller="@modelName">@tables.TableName</a>
+            </li>
+        }
+
+    }
+</ul>

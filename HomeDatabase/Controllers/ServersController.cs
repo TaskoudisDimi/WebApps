@@ -11,18 +11,19 @@ namespace HomeDatabase.Controllers
             SqlConnect loaddata = new SqlConnect();
             loaddata.retrieveData("Select * From Servers");
             DataTable servers = loaddata.table;
-            List<Servers> list = servers.AsEnumerable()
-                                .Select(row => new Servers
+            List<ServersViewModel> list = servers.AsEnumerable()
+                                .Select(row => new ServersViewModel
                                 {
                                     Id = Convert.ToInt32(row["Id"]),
                                     Name = row["Name"].ToString()
                                 })
                                 .ToList();
-            return View("~/Views/Database/Servers.cshtml", list);
+
+            return View(list);
         }
 
        
-        public IActionResult create(Servers servers)
+        public IActionResult Create(ServersViewModel servers)
         {
             SqlConnect sqlConnect = new SqlConnect();
             sqlConnect.execCom($"Insert Into Servers Values ('{servers.Name}')");
@@ -30,7 +31,7 @@ namespace HomeDatabase.Controllers
         }
 
 
-        public IActionResult Edit(Servers servers)
+        public IActionResult Edit(ServersViewModel servers)
         {
             SqlConnect sqlConnect = new SqlConnect();
             sqlConnect.execCom($"Edit Values ('{servers.Name}')");

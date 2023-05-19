@@ -11,7 +11,6 @@ namespace HomeDatabase.Controllers
 {
     public class FileController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
         private readonly IWebHostEnvironment _env;
 

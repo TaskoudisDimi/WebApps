@@ -8,23 +8,20 @@ using System.Linq;
 
 namespace HomeDatabase.Controllers
 {
-    public class DatabaseController : Controller
+    public class DatabasesController : Controller
     {   
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-        public IActionResult HomeDatabases()
+        public IActionResult Databases()
         {
             SqlConnect loaddata = new SqlConnect();
             List<Databases> databases = loaddata.GetDatabaseList();
             return View(databases);
         }
 
-        public IActionResult Tables()
+        public IActionResult Tables(Databases table)
         {
-            return RedirectToAction("Index", "Servers");
+
+            return RedirectToAction("Index", $"{table.Name}");
             
         }
     }
