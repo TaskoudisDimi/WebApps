@@ -1,4 +1,5 @@
-﻿using Dog.Models;
+﻿using Dog.Data;
+using Dog.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dog.Controllers
@@ -6,10 +7,17 @@ namespace Dog.Controllers
     public class CategoryController : Controller
     {
         private static List<CatViewModel> categories = new List<CatViewModel>();
+        private readonly CategoryDbContext dbContext;
+        
+        public CategoryController(CategoryDbContext db)
+        {
+            dbContext = db;
+        }
 
         public IActionResult Index()
         {
-            return View(categories);
+            IEnumerable<CatViewModel> categoriesDb = dbContext.Categories;
+            return View(categoriesDb);
         }
 
         public IActionResult Create()

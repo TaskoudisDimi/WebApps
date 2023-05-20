@@ -1,19 +1,18 @@
-﻿@model List<Dog.Models.CatViewModel>
+﻿@model IEnumerable<CatViewModel>
 
+<h1>Categories</h1>
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<h1> Categories </h1>
-<p>This is the index page of the Category Controller</p>
-
-
-<ul>
-    @foreach(var cat in Model){
-        <li>@cat.Name (@cat.Id)</li>
+<table>
+    <tr>
+        <th>Category ID</th>
+        <th>Category Name</th>
+    </tr>
+    @foreach (var category in Model)
+    {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+            </tr>
     }
-</ul>
+</table>
 
