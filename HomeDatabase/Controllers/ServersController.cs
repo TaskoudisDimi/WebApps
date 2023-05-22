@@ -37,28 +37,48 @@ namespace HomeDatabase.Controllers
 
         public IActionResult Edit(int? id)
         {
-            return View();
+            SqlConnect sql = new SqlConnect();
+            sql.retrieveData($"Select * From Servers where Id = '{id}'");
+            DataTable table = sql.table;
+            ServersViewModel server = new ServersViewModel();
+            
+            foreach(DataRow row in table.Rows)
+            {
+                server.Id = Convert.ToInt32(row["Id"]);
+                server.Name = row["Name"].ToString(); 
+            }
+            return View(server);
         }
 
         [HttpPost]
-        public IActionResult Edit(ServersViewModel servers)
+        public IActionResult Edit(ServersViewModel server)
         {
             SqlConnect sqlConnect = new SqlConnect();
-            sqlConnect.execCom($"Update Servers set Name = '{servers.Name}' where Id = {servers.Id}");
+            sqlConnect.execCom($"Update Servers set Name = '{server.Name}' where Id = {server.Id}");
             return RedirectToAction("Index");
         }
 
-        public IActionResult Delete()
+        public IActionResult Delete(int? id)
         {
-            return View();
+            SqlConnect sql = new SqlConnect();
+            sql.retrieveData($"Select * From Servers where Id = '{id}'");
+            DataTable table = sql.table;
+            ServersViewModel server = new ServersViewModel();
+
+            foreach (DataRow row in table.Rows)
+            {
+                server.Id = Convert.ToInt32(row["Id"]);
+                server.Name = row["Name"].ToString();
+            }
+            return View(server);
         }
 
         [HttpPost]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(ServersViewModel server)
         {
             SqlConnect sqlConnect = new SqlConnect();
-            sqlConnect.execCom($"Delete from Servers where Id = {id}");
-            return View($"Deleted {id}");
+            sqlConnect.execCom($"Delete from Servers where Id = {server.Id}");
+            return RedirectToAction("Index");
         }
 
 
