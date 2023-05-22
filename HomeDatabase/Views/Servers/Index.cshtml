@@ -3,7 +3,7 @@
 <h1>Servers</h1>
 
 <p>
-    <a asp-action="Create" asp-route-id="" asp-controller="Servers">Create new server</a>
+    <a asp-action="Create" asp-controller="Servers">Add</a>
 </p>
 
 <table class="table">
@@ -20,7 +20,6 @@
                 <td>@server.Id</td>
                 <td>@server.Name</td>
                 <td>
-                    <a asp-action="Create" asp-controller="Servers">Add</a>
                     <a asp-action="Edit" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Edit</a>
                     <a asp-action="Delete" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Delete</a>
                 </td>

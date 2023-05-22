@@ -1,1 +1,21 @@
-﻿
+﻿@model ServersViewModel
+
+<form asp-action="Create" asp-controller="Servers" method="post">
+    <div >
+        <label asp-for="Id">
+            Id
+        </label>
+        <input asp-for="Id" required/>
+    </div>
+    <div>
+        <label asp-for="Name">
+            Name
+        </label>
+        <input asp-for="Name" required />
+    </div>
+    <div>
+        <input type="submit" value="Create"/>
+    </div>
+</form>
+
+

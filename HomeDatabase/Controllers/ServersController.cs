@@ -22,23 +22,38 @@ namespace HomeDatabase.Controllers
             return View(list);
         }
 
-       
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult Create(ServersViewModel servers)
         {
             SqlConnect sqlConnect = new SqlConnect();
             sqlConnect.execCom($"Insert Into Servers Values ('{servers.Name}')");
-            return View(servers);
+            return RedirectToAction("Index");
         }
 
+        public IActionResult Edit(int? id)
+        {
+            return View();
+        }
 
+        [HttpPost]
         public IActionResult Edit(ServersViewModel servers)
         {
             SqlConnect sqlConnect = new SqlConnect();
-            sqlConnect.execCom($"Edit Values ('{servers.Name}')");
-            return View(servers);
+            sqlConnect.execCom($"Update Servers set Name = '{servers.Name}' where Id = {servers.Id}");
+            return RedirectToAction("Index");
         }
 
+        public IActionResult Delete()
+        {
+            return View();
+        }
 
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             SqlConnect sqlConnect = new SqlConnect();
