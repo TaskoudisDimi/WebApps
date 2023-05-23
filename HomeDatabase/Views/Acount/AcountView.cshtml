@@ -1,19 +1,7 @@
 ﻿@model LogInViewModel
 
-<form asp-action="Login" method="post">
-    <div>
-        <label asp-for="Username">
-            Username:
-        </label>
-        <input asp-for="Username" required/>
-    </div>
-    <div>
-        <label asp-for="Password">
-            Password:
-        </label>
-        <input asp-for="Password" required />
-    </div>
-    <div>
-        <input type="submit" value="Log In"/>
-    </div>
+
+<form>
+    <input type="submit" asp-action="Login" asp-controller="Acount" value="Login"/>
+    <input type="submit" asp-action="Register" asp-controller="Acount" value="Register" />
 </form>

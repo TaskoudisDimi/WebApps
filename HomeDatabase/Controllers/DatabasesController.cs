@@ -11,7 +11,7 @@ namespace HomeDatabase.Controllers
     public class DatabasesController : Controller
     {   
 
-        public IActionResult Databases()
+        public IActionResult ListOfDatabases()
         {
             SqlConnect loaddata = new SqlConnect();
             List<Databases> databases = loaddata.GetDatabaseList();

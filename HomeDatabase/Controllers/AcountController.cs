@@ -10,11 +10,16 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Login(LogInViewModel login)
-        {
 
-            return RedirectToAction("Databases", "Databases");
+        public IActionResult LogIn(LogInViewModel login)
+        {
+            return View();
+        }
+
+        public IActionResult Register(LogInViewModel login)
+        {
+            return View();
+
         }
     }
 }
