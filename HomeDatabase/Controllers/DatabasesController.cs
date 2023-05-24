@@ -15,6 +15,7 @@ namespace HomeDatabase.Controllers
         {
             SqlConnect loaddata = new SqlConnect();
             List<Databases> databases = loaddata.GetDatabaseList();
+
             return View(databases);
         }
 

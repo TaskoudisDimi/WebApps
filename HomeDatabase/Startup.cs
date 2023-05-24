@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using HomeDatabase.Controllers;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace HomeDatabase
 {
@@ -19,8 +25,17 @@ namespace HomeDatabase
 
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddControllersWithViews();
             services.AddSingleton<IConfiguration>(Configuration);
+            // Register SQL Server connection
+            services.AddTransient<IDbConnection>(provider =>
+            {
+                string connectionString = Configuration.GetConnectionString("Home");
+                return new SqlConnection(connectionString);
+            });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,7 +59,7 @@ namespace HomeDatabase
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Acount}/{action=AcountView}/{id?}");
+                    pattern: "{controller=Account}/{action=AccountView}/{id?}");
             });
         }
 

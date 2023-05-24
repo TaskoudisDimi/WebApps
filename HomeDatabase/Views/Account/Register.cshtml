@@ -1,6 +1,6 @@
 ﻿@model RegisterViewModel
 
-<form asp-action="Login" method="post">
+<form asp-action="Register" method="post">
     <div>
         <label asp-for="Username">
             Username:
@@ -27,5 +27,11 @@
     </div>
     <div>
         <input type="submit" value="Register" />
+    </div>
+    
+</form>
+<form>
+    <div>
+        <input asp-action="AccountView" type="submit" value="Back" />
     </div>
 </form>

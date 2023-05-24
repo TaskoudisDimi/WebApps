@@ -143,6 +143,22 @@ namespace HomeDatabase
             }
         }
 
+        public int execComTest(string cmd)
+        {
+            OpenCon();
+            int test = 0;
+            try
+            {
+                SqlCommand command = new SqlCommand(cmd, con);
+                test = command.ExecuteNonQuery();
+            }
+            catch
+            {
+
+            }
+            return test;
+        }
+
 
     }
 }
