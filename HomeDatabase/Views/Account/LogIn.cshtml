@@ -1,5 +1,10 @@
 ﻿@model LogInViewModel
 
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+
 <form asp-action="Login" method="post">
     <div>
         <label asp-for="Username">

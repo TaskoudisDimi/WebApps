@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using HomeDatabase.Database;
 
 namespace HomeDatabase
 {
@@ -59,7 +60,7 @@ namespace HomeDatabase
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=AccountView}/{id?}");
+                    pattern: "{controller=Account}/{action=LogIn}/{id?}");
             });
         }
 
