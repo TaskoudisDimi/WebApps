@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using HomeDatabase.Database;
 
 namespace HomeDatabase.Controllers
 {
@@ -47,6 +48,7 @@ namespace HomeDatabase.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             // Generate a verification token (e.g., a GUID)
+            // Generate Token
             string verificationToken = Guid.NewGuid().ToString();
 
             // Save the verification token and user details to the database

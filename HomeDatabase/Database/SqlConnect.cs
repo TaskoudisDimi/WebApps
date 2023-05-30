@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Data;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-namespace HomeDatabase
+namespace HomeDatabase.Database
 {
     public class SqlConnect
     {
 
         public static string conStr;
         private static SqlConnection con = new SqlConnection();
-        
+
         public DataTable table = new DataTable();
 
         public SqlConnect()
         {
-            if(con.State != ConnectionState.Open)
+            if (con.State != ConnectionState.Open)
                 con.ConnectionString = conStr;
-            
+
         }
 
         public void OpenCon()
@@ -49,7 +49,7 @@ namespace HomeDatabase
         {
             try
             {
-                
+
                 SqlDataAdapter adapter = new SqlDataAdapter(command, con);
                 adapter.Fill(table);
 
@@ -123,7 +123,7 @@ namespace HomeDatabase
                         {
                             Databases databases = new Databases();
                             databases.Name = reader["Name"].ToString();
-                            if(!databases.Name.Contains("master") && !databases.Name.Contains("tempdb") && !databases.Name.Contains("model") &&
+                            if (!databases.Name.Contains("master") && !databases.Name.Contains("tempdb") && !databases.Name.Contains("model") &&
                                 !databases.Name.Contains("msdb"))
                                 listDB.Add(databases);
                         }
