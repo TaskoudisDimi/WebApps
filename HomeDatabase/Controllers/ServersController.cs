@@ -31,7 +31,7 @@ namespace HomeDatabase.Controllers
         public IActionResult Create(ServersViewModel servers)
         {
             SqlConnect sqlConnect = new SqlConnect();
-            sqlConnect.execCom($"Insert Into Servers Values ('{servers.Name}')");
+            sqlConnect.execNonQuery($"Insert Into Servers Values ('{servers.Name}')");
             return RedirectToAction("Index");
         }
 
@@ -54,7 +54,7 @@ namespace HomeDatabase.Controllers
         public IActionResult Edit(ServersViewModel server)
         {
             SqlConnect sqlConnect = new SqlConnect();
-            sqlConnect.execCom($"Update Servers set Name = '{server.Name}' where Id = {server.Id}");
+            sqlConnect.execNonQuery($"Update Servers set Name = '{server.Name}' where Id = {server.Id}");
             return RedirectToAction("Index");
         }
 
@@ -77,7 +77,7 @@ namespace HomeDatabase.Controllers
         public IActionResult Delete(ServersViewModel server)
         {
             SqlConnect sqlConnect = new SqlConnect();
-            sqlConnect.execCom($"Delete from Servers where Id = {server.Id}");
+            sqlConnect.execNonQuery($"Delete from Servers where Id = {server.Id}");
             return RedirectToAction("Index");
         }
 

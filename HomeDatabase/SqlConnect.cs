@@ -64,7 +64,42 @@ namespace HomeDatabase
                 CloseCon();
             }
         }
+        public void execNonQuery(string cmd)
+        {
+            OpenCon();
+            try
+            {
+                SqlCommand command = new SqlCommand(cmd, con);
+                int response = command.ExecuteNonQuery();
+                if(response == 0 )
+                {
+                    command.ExecuteNonQuery();
+                }
+                CloseCon();
+            }
+            catch
+            {
 
+            }
+        }
+
+        public void execScalar(string cmd)
+        {
+            OpenCon();
+            try
+            {
+                SqlCommand command = new SqlCommand(cmd, con);
+                object response = command.ExecuteScalar();
+                //command.CommandText = cmd;
+                //command.Dispose();
+                command.ExecuteNonQuery();
+                CloseCon();
+            }
+            catch
+            {
+
+            }
+        }
 
         //Get Databases
         public List<Databases> GetDatabaseList()
@@ -127,37 +162,9 @@ namespace HomeDatabase
             return listServers;
         }
 
+        
 
 
-        public void execCom(string cmd)
-        {
-            OpenCon();
-            try
-            {
-                SqlCommand command = new SqlCommand(cmd, con);
-                command.ExecuteNonQuery();
-            }
-            catch
-            {
-
-            }
-        }
-
-        public int execComTest(string cmd)
-        {
-            OpenCon();
-            int test = 0;
-            try
-            {
-                SqlCommand command = new SqlCommand(cmd, con);
-                test = command.ExecuteNonQuery();
-            }
-            catch
-            {
-
-            }
-            return test;
-        }
 
 
     }

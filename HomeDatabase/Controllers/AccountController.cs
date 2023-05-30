@@ -55,7 +55,7 @@ namespace HomeDatabase.Controllers
             loadUser.retrieveData($"Select * From Users where token = {verificationToken}");
             if (!(loadUser.table.Rows.Count > 0))
             {
-                loadUser.execCom($"Insert Into Users values ('Test','1234','{verificationToken}')");
+                loadUser.execNonQuery($"Insert Into Users values ('Test','1234','{verificationToken}')");
             }
             // Send verification email
             string callbackUrl = Url.Action("VerifyAccount", "Account", new { token = verificationToken }, protocol: HttpContext.Request.Scheme);
