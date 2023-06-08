@@ -1,7 +1,7 @@
 ﻿@model LogInViewModel
 
 @{
-    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
@@ -25,5 +25,11 @@
 <form>
     <div>
         <input asp-action="AccountView" type="submit" value="Back" />
+    </div>
+</form>
+
+<form>
+    <div>
+        <input asp-controller="File" asp-action="Download" type="submit" value="Download" />
     </div>
 </form>
