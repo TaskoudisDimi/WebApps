@@ -107,7 +107,7 @@ namespace HomeDatabase.Database
             List<Databases> listDB = new List<Databases>();
             // Open connection to the database
             //string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
-            string conString = "server=192.168.24.177,51434;database=Home;Integrated Security=SSPI;TrustServerCertificate=True";
+            string conString = "Data Source=192.168.24.177,51434;database=Home;Persist Security Info=True;User ID=sa;Password=c0mpuc0n; TrustServerCertificate=True;";
 
             using (SqlConnection con = new SqlConnection(conString))
             {
@@ -138,7 +138,7 @@ namespace HomeDatabase.Database
         {
             List<TableViewModel> listServers = new List<TableViewModel>();
             //string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
-            string conString = "server=192.168.24.177,51434;database=Home;Integrated Security=SSPI;TrustServerCertificate=True";
+            string conString = "Data Source=192.168.24.177,51434;database=Home;Persist Security Info=True;User ID=sa;Password=c0mpuc0n; TrustServerCertificate=True;";
             using (SqlConnection con = new SqlConnection(conString))
             {
                 con.Open();

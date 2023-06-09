@@ -6,6 +6,13 @@ using System.Net.Mail;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using HomeDatabase.Database;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System.Text;
+using System;
 
 namespace HomeDatabase.Controllers
 {
@@ -24,12 +31,18 @@ namespace HomeDatabase.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogIn(LogInViewModel login)
+        public async Task<IActionResult> LogIn(LogInViewModel login)
         {
             SqlConnect loadUser = new SqlConnect();
             loadUser.retrieveData($"Select * From Users where Username = '{login.Username}' And Password = '{login.Password}'");
             if (loadUser.table.Rows.Count > 0)
             {
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, login.Username)
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 return RedirectToAction("ListOfDatabases", "Databases");
             }
             else
@@ -37,7 +50,7 @@ namespace HomeDatabase.Controllers
                 return View("LogIn");
             }
         }
-
+        
         [HttpGet]
         public IActionResult Register()
         {

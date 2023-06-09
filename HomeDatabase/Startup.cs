@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using HomeDatabase.Database;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace HomeDatabase
 {
@@ -36,6 +37,14 @@ namespace HomeDatabase
                 return new SqlConnection(connectionString);
             });
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.Cookie.Name = "HomeDatabase.AuthCookie";
+                options.LoginPath = "/Account/LogIn";
+                //options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+            services.AddAuthorization();
+
             
         }
 
@@ -51,9 +60,9 @@ namespace HomeDatabase
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

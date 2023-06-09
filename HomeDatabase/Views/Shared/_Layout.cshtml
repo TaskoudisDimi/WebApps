@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authentication
+@using System.Security.Claims
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,7 +25,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="AccountView">Home</a>
                         </li>
+                        
                     </ul>
+                    <ul class="nav-item navbar-right">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <p>Welcome, <span>@User.FindFirstValue(ClaimTypes.Name)</span>!</p>
+                            @*<a href="/Account/Logout">Logout</a> <!-- Update with your logout path -->*@
+                        }
+                        else
+                        {
+                            <a href="/Account/Login">Login</a> <!-- Update with your login path -->
+                            <a href="/Account/Register">Register</a> <!-- Update with your register path -->
+                        }
+                    </ul>
+
                 </div>
             </div>
         </nav>
