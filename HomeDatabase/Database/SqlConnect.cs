@@ -1,7 +1,9 @@
 ﻿using HomeDatabase.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace HomeDatabase.Database
@@ -163,9 +165,35 @@ namespace HomeDatabase.Database
         }
 
         
+        //public DataTable ExecTable()
+        //{
+        //    DataTable table = new DataTable();
+        //    return table;
+        //}
 
+        //public DbDataReader ExecReader()
+        //{
+        //    DbDataReader reader;
+        //    DbCommand command;
+            
+        //    return reader;
+        //}
 
+        //public DataSet ExecDataSet()
+        //{
 
+        //    return;
+        //}
+
+        //public int ExecNQ()
+        //{
+        //    return;
+        //}
+
+        //public object ExecScalar()
+        //{
+        //    return;
+        //}
 
     }
 }
