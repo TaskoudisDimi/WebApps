@@ -5,6 +5,7 @@ namespace HomeDatabase
 {
     public class Helper
     {
+        private static readonly IWebHostEnvironment _env;
         public void SMTP()
         {
             var client = new SmtpClient
@@ -16,6 +17,20 @@ namespace HomeDatabase
             };
         }
 
+
+        public static void Log(string message,string title)
+        {
+            try
+            {
+                string appRootPath = AppContext.BaseDirectory;
+                string path = appRootPath + $"{title}.txt";
+                File.WriteAllText(path, message);
+            }
+            catch
+            {
+
+            }
+        }
 
     }
 }

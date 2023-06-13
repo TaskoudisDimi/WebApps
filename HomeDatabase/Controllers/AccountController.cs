@@ -115,6 +115,15 @@ namespace HomeDatabase.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult Test()
+        {
+            string sql = "Select * from Servers";
+            SqlConnect obj = new SqlConnect();
+            obj.Select(sql);
+            return View();
+        }
+
     }
 
 

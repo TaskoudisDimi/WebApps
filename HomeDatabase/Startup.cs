@@ -18,9 +18,9 @@ namespace HomeDatabase
         {
             Configuration = configuration;
             
-            SqlConnect.conStr = ConfigurationExtensions.GetConnectionString(this.Configuration, "Home");
-            connect = new SqlConnect();
-            connect.OpenCon();
+            //SqlConnect.con = ConfigurationExtensions.GetConnectionString(this.Configuration, "Home");
+            //connect = new SqlConnect();
+            //connect.OpenCon();
         }
 
         public IConfiguration Configuration { get; }

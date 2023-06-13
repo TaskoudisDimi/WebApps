@@ -1,9 +1,14 @@
 ﻿using HomeDatabase.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Client;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
+using System.Drawing;
+using System.Text;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace HomeDatabase.Database
@@ -11,48 +16,194 @@ namespace HomeDatabase.Database
     public class SqlConnect
     {
 
-        public static string conStr;
-        private static SqlConnection con = new SqlConnection();
-
         public DataTable table = new DataTable();
+
+        public static int queryTimeOut = 10;
+        private SqlConnection connection = null;
+        public SqlDataReader reader = null;
+        private static int InstanceIdCounter = 0;
+        static Dictionary<int, SqlConnect> instances = new Dictionary<int, SqlConnect>();
+        private readonly int instanceID;
+        private static readonly ThreadLocal<int> currentInstanceId = new ThreadLocal<int>();
+        public static string ConnectionString
+        {
+            get { return "Data Source=192.168.24.177,51434;database=Home;Persist Security Info=True;User ID=sa;Password=c0mpuc0n; TrustServerCertificate=True;"; }
+        }
+        private DataTable dt;
 
         public SqlConnect()
         {
-            if (con.State != ConnectionState.Open)
-                con.ConnectionString = conStr;
-
+            this.instanceID = currentInstanceId.Value;
+            using (Locker.Lock(instances))
+            {
+                if (!instances.ContainsKey(this.instanceID))
+                {
+                    instances.Add(this.instanceID, this);
+                }
+                else
+                {
+                    throw new InvalidOperationException("No instance found for the current context.");
+                }
+            }
         }
 
-        public void OpenCon()
+        //if true = Create Connection
+        public bool CheckConnection()
         {
             try
             {
-                con.Open();
+                CloseConnection();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Helper.Log(ex.Message, "CheckConnection");
             }
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                return openConnection();
+            }
+            return true;
         }
 
-        private static void CloseCon()
+        private void CloseConnection(bool OK = true)
         {
             try
             {
-                con.Close();
+                if (connection == null)
+                    return;
+                if (reader != null)
+                {
+                    reader.Close();
+                    reader.Dispose();
+                    reader = null;
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Helper.Log(ex.Message, "CheckConnection");
             }
+
         }
+
+        public bool openConnection()
+        {
+            CloseConnection();
+            connection = new SqlConnection(ConnectionString);
+            try
+            {
+                using (Locker.Lock(instances))
+                {
+                    connection.Open();
+                }
+            }
+            catch (Exception ex)
+            {
+                Helper.Log(ex.Message, "OpenConnection");
+                connection.Dispose();
+                connection = null;
+                instances.Remove(currentInstanceId.Value);
+                SqlConnection.ClearAllPools();
+            }
+            return connection != null;
+        }
+
+
+        public SqlDataReader Select(string sql, List<SqlParameter> parameters = null)
+        {
+            int res = -1;
+            if (!CheckConnection())
+            {
+                return null;
+            }
+            using (Locker.Lock(instances))
+            {
+                DateTime dtStart = DateTime.Now;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandTimeout = queryTimeOut;
+                cmd.Connection = connection;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                //cmd.Transaction = transaction
+                if (parameters != null)
+                {
+                    cmd.Parameters.AddRange(parameters.ToArray());
+                }
+                try
+                {
+                    reader = cmd.ExecuteReader();
+                    //TODO: Remove instance when close reader
+                    //instances.Remove(currentInstanceId.Value);
+                }
+                catch
+                {
+
+                }
+                long dt = (long)((DateTime.Now - dtStart).TotalMilliseconds);
+                if (dt > 100)
+                {
+                    Helper.Log("Sql query is : " + sql + "And the time is : " + dt,"Query");
+                }
+            }
+            return reader;
+        }
+
+        public void InsertData()
+        {
+            
+
+        }
+
+        public DataTable SelectDataTable(string sql, List<SqlParameter> parameters = null)
+        {
+            
+            if (!CheckConnection())
+            {
+                return null;
+            }
+            using (Locker.Lock(instances))
+            {
+                
+                DateTime dtStart = DateTime.Now;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandTimeout = queryTimeOut;
+                cmd.Connection = connection;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                //cmd.Transaction = transaction
+                if (parameters != null)
+                {
+                    cmd.Parameters.AddRange(parameters.ToArray());
+                }
+                try
+                {
+                    reader = cmd.ExecuteReader();
+                    dt = new DataTable();
+                    dt.Load(reader);
+
+                    //TODO: Remove instance when close reader
+                    //instances.Remove(currentInstanceId.Value);
+                }
+                catch
+                {
+
+                }
+                long time = (long)((DateTime.Now - dtStart).TotalMilliseconds);
+                if (time > 100)
+                {
+                    Helper.Log("Sql query is : " + sql + "And the time is : " + time, "Query");
+                }
+            }
+            return dt;
+        }
+
+
 
         public void retrieveData(string command)
         {
             try
             {
 
-                SqlDataAdapter adapter = new SqlDataAdapter(command, con);
+                SqlDataAdapter adapter = new SqlDataAdapter(command, connection);
                 adapter.Fill(table);
 
             }
@@ -61,48 +212,43 @@ namespace HomeDatabase.Database
 
                 Console.WriteLine(ex.Message);
             }
-            finally
-            {
-                CloseCon();
-            }
+
         }
         public void execNonQuery(string cmd)
         {
-            OpenCon();
+
             try
             {
-                SqlCommand command = new SqlCommand(cmd, con);
+                SqlCommand command = new SqlCommand(cmd, connection);
                 int response = command.ExecuteNonQuery();
-                if(response == 0 )
+                if (response == 0)
                 {
                     command.ExecuteNonQuery();
                 }
-                CloseCon();
+
             }
             catch
             {
 
             }
         }
-
         public void execScalar(string cmd)
         {
-            OpenCon();
+
             try
             {
-                SqlCommand command = new SqlCommand(cmd, con);
+                SqlCommand command = new SqlCommand(cmd, connection);
                 object response = command.ExecuteScalar();
                 //command.CommandText = cmd;
                 //command.Dispose();
                 command.ExecuteNonQuery();
-                CloseCon();
+
             }
             catch
             {
 
             }
         }
-
         //Get Databases
         public List<Databases> GetDatabaseList()
         {
@@ -164,7 +310,7 @@ namespace HomeDatabase.Database
             return listServers;
         }
 
-        
+
         //public DataTable ExecTable()
         //{
         //    DataTable table = new DataTable();
@@ -175,7 +321,7 @@ namespace HomeDatabase.Database
         //{
         //    DbDataReader reader;
         //    DbCommand command;
-            
+
         //    return reader;
         //}
 
