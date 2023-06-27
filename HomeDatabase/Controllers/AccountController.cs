@@ -33,22 +33,23 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> LogIn(LogInViewModel login)
         {
-            SqlConnect loadUser = new SqlConnect();
-            loadUser.retrieveData($"Select * From Users where Username = '{login.Username}' And Password = '{login.Password}'");
-            if (loadUser.table.Rows.Count > 0)
-            {
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.Name, login.Username)
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
-                return RedirectToAction("ListOfDatabases", "Databases");
-            }
-            else
-            {
-                return View("LogIn");
-            }
+            //SqlConnect loadUser = new SqlConnect();
+            //loadUser.retrieveData($"Select * From Users where Username = '{login.Username}' And Password = '{login.Password}'");
+            //if (loadUser.table.Rows.Count > 0)
+            //{
+            //    var claims = new[]
+            //    {
+            //        new Claim(ClaimTypes.Name, login.Username)
+            //    };
+            //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+            //    return RedirectToAction("ListOfDatabases", "Databases");
+            //}
+            //else
+            //{
+            //    return View("LogIn");
+            //}
+            return View("LogIn");
         }
         
         [HttpGet]
@@ -60,34 +61,34 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            // Generate a verification token (e.g., a GUID)
-            // Generate Token
-            string verificationToken = Guid.NewGuid().ToString();
+            //// Generate a verification token (e.g., a GUID)
+            //// Generate Token
+            //string verificationToken = Guid.NewGuid().ToString();
 
-            // Save the verification token and user details to the database
-            //Check if the user is in the database
-            SqlConnect loadUser = new SqlConnect();
-            loadUser.retrieveData($"Select * From Users where token = {verificationToken}");
-            if (!(loadUser.table.Rows.Count > 0))
-            {
-                loadUser.execNonQuery($"Insert Into Users values ('Test','1234','{verificationToken}')");
-            }
-            // Send verification email
-            string callbackUrl = Url.Action("VerifyAccount", "Account", new { token = verificationToken }, protocol: HttpContext.Request.Scheme);
+            //// Save the verification token and user details to the database
+            ////Check if the user is in the database
+            //SqlConnect loadUser = new SqlConnect();
+            //loadUser.retrieveData($"Select * From Users where token = {verificationToken}");
+            //if (!(loadUser.table.Rows.Count > 0))
+            //{
+            //    loadUser.execNonQuery($"Insert Into Users values ('Test','1234','{verificationToken}')");
+            //}
+            //// Send verification email
+            //string callbackUrl = Url.Action("VerifyAccount", "Account", new { token = verificationToken }, protocol: HttpContext.Request.Scheme);
 
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress(model.Email);
-            message.To.Add(new MailAddress(model.Email));
-            message.Subject = "Account Verification";
-            message.Body = $"Dear {model.Username},<br/><br/>Please click the link below to verify your account:<br/><br/><a href=\"{callbackUrl}\">{callbackUrl}</a>";
-            message.IsBodyHtml = true;
+            //MailMessage message = new MailMessage();
+            //message.From = new MailAddress(model.Email);
+            //message.To.Add(new MailAddress(model.Email));
+            //message.Subject = "Account Verification";
+            //message.Body = $"Dear {model.Username},<br/><br/>Please click the link below to verify your account:<br/><br/><a href=\"{callbackUrl}\">{callbackUrl}</a>";
+            //message.IsBodyHtml = true;
 
-            using (SmtpClient smtpClient = new SmtpClient("smtp-relay.sendinblue.com", 587))
-            {
-                smtpClient.Credentials = new NetworkCredential("taskoudisdimitris@gmail.com", "NZ0cqP31rFRT9gJL");
-                smtpClient.EnableSsl = true;
-                await smtpClient.SendMailAsync(message);
-            }
+            //using (SmtpClient smtpClient = new SmtpClient("smtp-relay.sendinblue.com", 587))
+            //{
+            //    smtpClient.Credentials = new NetworkCredential("taskoudisdimitris@gmail.com", "NZ0cqP31rFRT9gJL");
+            //    smtpClient.EnableSsl = true;
+            //    await smtpClient.SendMailAsync(message);
+            //}
 
             return RedirectToAction("EmailConfirmed");
         }
@@ -101,26 +102,27 @@ namespace HomeDatabase.Controllers
         // Action method to handle account verification
         public IActionResult VerifyAccount(string token)
         {
-            LogInViewModel user = new LogInViewModel();
-            SqlConnect loadUser = new SqlConnect();
-            loadUser.retrieveData($"Select * From Users where Token = '{token}'");
-            if (loadUser.table.Rows.Count > 0)
-            {
-                return RedirectToAction("ListOfDatabases", "Databases");
-            }
-            else
-            {
-                return View("Register");
-            }
+            //LogInViewModel user = new LogInViewModel();
+            //SqlConnect loadUser = new SqlConnect();
+            //loadUser.retrieveData($"Select * From Users where Token = '{token}'");
+            //if (loadUser.table.Rows.Count > 0)
+            //{
+            //    return RedirectToAction("ListOfDatabases", "Databases");
+            //}
+            //else
+            //{
+            //    return View("Register");
+            //}
+            return View("Register");
 
         }
 
         [HttpGet]
         public IActionResult Test()
         {
-            string sql = "Select * from Servers";
-            SqlConnect obj = new SqlConnect();
-            obj.Select(sql);
+            //string sql = "Select * from Servers";
+            //SqlConnect obj = new SqlConnect();
+            //obj.Select(sql);
             return View();
         }
 
