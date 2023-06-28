@@ -17,174 +17,140 @@ namespace HomeDatabase.Database
     {
 
         //public DataTable table = new DataTable();
-
-        //public static int queryTimeOut = 10;
-        //private SqlConnection connection = null;
-        //public SqlDataReader reader = null;
-        //private static int InstanceIdCounter = 0;
-        //static Dictionary<int, SqlConnect> instances = new Dictionary<int, SqlConnect>();
-        //private readonly int instanceID;
-        //private static readonly ThreadLocal<int> currentInstanceId = new ThreadLocal<int>();
         //private DataTable dt;
 
+        public static int queryTimeOut = 10;
+        private static int InstanceIdCounter = 0;
+        static Dictionary<int, SqlConnect> instances = new Dictionary<int, SqlConnect>();
+        private static int instanceID;
+        private static readonly ThreadLocal<int> currentInstanceId = new ThreadLocal<int>();
         private static SqlConnect instance;
         private static readonly object lockObject = new object();
-        string connectionString = string.Empty;
-        public static string ConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings["smarketdb"].ConnectionString;}
-        }
-       
-        public SqlConnect()
-        {
-            connectionString = ConnectionString;
-        }
-        
-        
+        public static string connectionString;
+        public SqlDataReader reader = null;
+        public SqlConnection connection = null;
+
         public static SqlConnect Instance
         {
             get
             {
-                lock (lockObject)
+                instanceID = currentInstanceId.Value;
+                SqlConnect res = new SqlConnect();
+                using (Locker.Lock(instances))
                 {
-                    if(instance == null)
+                    if (!instances.ContainsKey(instanceID))
                     {
-                        instance = new SqlConnect();
+                        instances[instanceID] = res;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("No instance found for the current context.");
                     }
                 }
-                return instance;
+                return res;
             }
         }
 
-        public SqlDataReader Select(string cmd)
+
+        //if true = Create Connection
+        public bool CheckConnection()
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                using(SqlCommand command = new SqlCommand(cmd))
+                CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                Helper.Log(ex.Message, "CheckConnection");
+            }
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                return openConnection();
+            }
+            return true;
+        }
+
+        private void CloseConnection(bool OK = true)
+        {
+            try
+            {
+                if (connection == null)
+                    return;
+                if (reader != null)
                 {
-                    connection.Open();
-                    return command.ExecuteReader();
+                    reader.Close();
+                    reader.Dispose();
+                    reader = null;
                 }
             }
-                
+            catch (Exception ex)
+            {
+                Helper.Log(ex.Message, "CheckConnection");
+            }
+
         }
 
-        //public SqlConnect()
-        //{
-        //    this.instanceID = currentInstanceId.Value;
-        //    using (Locker.Lock(instances))
-        //    {
-        //        if (!instances.ContainsKey(this.instanceID))
-        //        {
-        //            instances.Add(this.instanceID, this);
-        //        }
-        //        else
-        //        {
-
-        //            throw new InvalidOperationException("No instance found for the current context.");
-        //        }
-        //    }
-        //}
-
-        ////if true = Create Connection
-        //public bool CheckConnection()
-        //{
-        //    try
-        //    {
-        //        CloseConnection();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Helper.Log(ex.Message, "CheckConnection");
-        //    }
-        //    if (connection == null || connection.State != ConnectionState.Open)
-        //    {
-        //        return openConnection();
-        //    }
-        //    return true;
-        //}
-
-        //private void CloseConnection(bool OK = true)
-        //{
-        //    try
-        //    {
-        //        if (connection == null)
-        //            return;
-        //        if (reader != null)
-        //        {
-        //            reader.Close();
-        //            reader.Dispose();
-        //            reader = null;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Helper.Log(ex.Message, "CheckConnection");
-        //    }
-
-        //}
-
-        //public bool openConnection()
-        //{
-        //    CloseConnection();
-        //    connection = new SqlConnection(ConnectionString);
-        //    try
-        //    {
-        //        using (Locker.Lock(instances))
-        //        {
-        //            connection.Open();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Helper.Log(ex.Message, "OpenConnection");
-        //        connection.Dispose();
-        //        connection = null;
-        //        instances.Remove(currentInstanceId.Value);
-        //        SqlConnection.ClearAllPools();
-        //    }
-        //    return connection != null;
-        //}
+        public bool openConnection()
+        {
+            CloseConnection();
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                using (Locker.Lock(instances))
+                {
+                    connection.Open();
+                }
+            }
+            catch (Exception ex)
+            {
+                Helper.Log(ex.Message, "OpenConnection");
+                connection.Dispose();
+                connection = null;
+                instances.Remove(currentInstanceId.Value);
+                SqlConnection.ClearAllPools();
+            }
+            return connection != null;
+        }
 
 
-        //public SqlDataReader Select(string sql, List<SqlParameter> parameters = null)
-        //{
-        //    int res = -1;
-        //    if (!CheckConnection())
-        //    {
-        //        return null;
-        //    }
-        //    using (Locker.Lock(instances))
-        //    {
-        //        DateTime dtStart = DateTime.Now;
-        //        SqlCommand cmd = new SqlCommand();
-        //        cmd.CommandTimeout = queryTimeOut;
-        //        cmd.Connection = connection;
-        //        cmd.CommandType = CommandType.Text;
-        //        cmd.CommandText = sql;
-        //        //cmd.Transaction = transaction
-        //        if (parameters != null)
-        //        {
-        //            cmd.Parameters.AddRange(parameters.ToArray());
-        //        }
-        //        try
-        //        {
-        //            reader = cmd.ExecuteReader();
-        //            //TODO: Remove instance when close reader
-        //            //instances.Remove(currentInstanceId.Value);
-        //        }
-        //        catch
-        //        {
+        public SqlDataReader Select(string sql, List<SqlParameter> parameters = null)
+        {
+            int res = -1;
+            if (!CheckConnection())
+            {
+                return null;
+            }
+            using (Locker.Lock(instances))
+            {
+                DateTime dtStart = DateTime.Now;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandTimeout = queryTimeOut;
+                cmd.Connection = connection;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                //cmd.Transaction = transaction
+                if (parameters != null)
+                {
+                    cmd.Parameters.AddRange(parameters.ToArray());
+                }
+                try
+                {
+                    reader = cmd.ExecuteReader();
+                    //TODO: Remove instance when close reader
+                    instances.Remove(currentInstanceId.Value);
+                }
+                catch
+                {
 
-        //        }
-        //        long dt = (long)((DateTime.Now - dtStart).TotalMilliseconds);
-        //        if (dt > 100)
-        //        {
-        //            Helper.Log("Sql query is : " + sql + "And the time is : " + dt,"Query");
-        //        }
-        //    }
-        //    return reader;
-        //}
+                }
+                long dt = (long)((DateTime.Now - dtStart).TotalMilliseconds);
+                if (dt > 100)
+                {
+                    Helper.Log("Sql query is : " + sql + "And the time is : " + dt, "Query");
+                }
+            }
+            return reader;
+        }
 
         //public void InsertData()
         //{
@@ -292,11 +258,8 @@ namespace HomeDatabase.Database
         public List<Databases> GetDatabaseList()
         {
             List<Databases> listDB = new List<Databases>();
-            // Open connection to the database
-            //string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
-            string conString = "Data Source=192.168.24.177,51434;database=Home;Persist Security Info=True;User ID=sa;Password=c0mpuc0n; TrustServerCertificate=True;";
 
-            using (SqlConnection con = new SqlConnection(conString))
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 con.Open();
 
@@ -324,9 +287,7 @@ namespace HomeDatabase.Database
         public List<TableViewModel> GetTables()
         {
             List<TableViewModel> listServers = new List<TableViewModel>();
-            //string conString = "server=DIMITRISTASKOUD\\DIMITRIS_TASKOUD;database=Home;Integrated Security=SSPI;TrustServerCertificate=True;";
-            string conString = "Data Source=192.168.24.177,51434;database=Home;Persist Security Info=True;User ID=sa;Password=c0mpuc0n; TrustServerCertificate=True;";
-            using (SqlConnection con = new SqlConnection(conString))
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 con.Open();
 

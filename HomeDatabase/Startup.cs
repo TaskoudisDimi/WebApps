@@ -13,14 +13,12 @@ namespace HomeDatabase
 {
     public class Startup
     {
-        SqlConnect connect;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
-            //SqlConnect.con = ConfigurationExtensions.GetConnectionString(this.Configuration, "Home");
-            //connect = new SqlConnect();
-            //connect.OpenCon();
+
+            SqlConnect.connectionString = ConfigurationExtensions.GetConnectionString(this.Configuration, "Home");
         }
 
         public IConfiguration Configuration { get; }
@@ -30,12 +28,6 @@ namespace HomeDatabase
             
             services.AddControllersWithViews();
             services.AddSingleton<IConfiguration>(Configuration);
-            // Register SQL Server connection
-            services.AddTransient<IDbConnection>(provider =>
-            {
-                string connectionString = Configuration.GetConnectionString("Home");
-                return new SqlConnection(connectionString);
-            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {

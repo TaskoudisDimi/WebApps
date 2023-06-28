@@ -15,8 +15,7 @@ namespace HomeDatabase.Controllers
         public IActionResult ListOfDatabases()
         {
             SqlConnect loaddata = new SqlConnect();
-            List<Databases> databases = loaddata.GetDatabaseList();
-
+            List<Databases> databases = SqlConnect.Instance.GetDatabaseList();
             return View(databases);
         }
 
