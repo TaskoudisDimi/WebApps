@@ -1,11 +1,6 @@
 ﻿using HomeDatabase.Database;
 using HomeDatabase.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
 
 namespace HomeDatabase.Controllers
 {
@@ -21,7 +16,6 @@ namespace HomeDatabase.Controllers
 
         public IActionResult Tables(Databases table)
         {
-
             return RedirectToAction("Index", $"{table.Name}");
             
         }

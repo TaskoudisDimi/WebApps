@@ -33,23 +33,21 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> LogIn(LogInViewModel login)
         {
-            //SqlConnect loadUser = new SqlConnect();
-            //loadUser.retrieveData($"Select * From Users where Username = '{login.Username}' And Password = '{login.Password}'");
-            //if (loadUser.table.Rows.Count > 0)
-            //{
-            //    var claims = new[]
-            //    {
-            //        new Claim(ClaimTypes.Name, login.Username)
-            //    };
-            //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
-            //    return RedirectToAction("ListOfDatabases", "Databases");
-            //}
-            //else
-            //{
-            //    return View("LogIn");
-            //}
-            return View("LogIn");
+            DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From Users where Username = '{login.Username}' And Password = '{login.Password}'");
+            if (table.Rows.Count > 0)
+            {
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, login.Username)
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+                return RedirectToAction("ListOfDatabases", "Databases");
+            }
+            else
+            {
+                return View("LogIn");
+            }
         }
         
         [HttpGet]
@@ -102,19 +100,16 @@ namespace HomeDatabase.Controllers
         // Action method to handle account verification
         public IActionResult VerifyAccount(string token)
         {
-            //LogInViewModel user = new LogInViewModel();
-            //SqlConnect loadUser = new SqlConnect();
-            //loadUser.retrieveData($"Select * From Users where Token = '{token}'");
-            //if (loadUser.table.Rows.Count > 0)
-            //{
-            //    return RedirectToAction("ListOfDatabases", "Databases");
-            //}
-            //else
-            //{
-            //    return View("Register");
-            //}
-            return View("Register");
-
+            LogInViewModel user = new LogInViewModel();
+            DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From Users where Token = '{token}'");
+            if (table.Rows.Count > 0)
+            {
+                return RedirectToAction("ListOfDatabases", "Databases");
+            }
+            else
+            {
+                return View("Register");
+            }
         }
 
 

@@ -11,8 +11,7 @@ namespace HomeDatabase.Controllers
        
         public IActionResult Index()
         {
-            SqlConnect loaddata = new SqlConnect();
-            List<TableViewModel> databases = loaddata.GetTables();
+            List<TableViewModel> databases = SqlConnect.Instance.GetTables();
             return View(databases);
 
         }
