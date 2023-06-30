@@ -61,7 +61,7 @@ namespace HomeDatabase
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=LogIn}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}");
             });
         }
 

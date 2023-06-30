@@ -145,7 +145,7 @@ namespace HomeDatabase.Database
             return reader;
         }
 
-        public int Insert()
+        public int Insert(string cmd)
         {
             if (!CheckConnection())
             {
@@ -153,7 +153,7 @@ namespace HomeDatabase.Database
             }
             try
             {
-                SqlCommand command = new SqlCommand();
+                SqlCommand command = new SqlCommand(cmd, connection);
                 return command.ExecuteNonQuery();
             }
             catch
@@ -163,7 +163,7 @@ namespace HomeDatabase.Database
 
         }
 
-        public int Update()
+        public int Update(string cmd)
         {
             if (!CheckConnection())
             {
@@ -171,7 +171,7 @@ namespace HomeDatabase.Database
             }
             try
             {
-                SqlCommand command = new SqlCommand();
+                SqlCommand command = new SqlCommand(cmd, connection);
                 return command.ExecuteNonQuery();
 
             }
@@ -181,7 +181,7 @@ namespace HomeDatabase.Database
             }
         }
 
-        public int Delete()
+        public int Delete(string cmd)
         {
             if (!CheckConnection())
             {
@@ -189,7 +189,7 @@ namespace HomeDatabase.Database
             }
             try
             {
-                SqlCommand command = new SqlCommand();
+                SqlCommand command = new SqlCommand(cmd, connection);
                 return command.ExecuteNonQuery();
 
             }
