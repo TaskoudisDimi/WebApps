@@ -22,5 +22,12 @@ namespace HomeDatabase.Controllers
             return RedirectToAction("Index", $"{table.Name}");
             
         }
+
+        public IActionResult GoBack()
+        {
+           
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

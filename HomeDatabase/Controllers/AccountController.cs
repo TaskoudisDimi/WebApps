@@ -118,6 +118,16 @@ namespace HomeDatabase.Controllers
             return RedirectToAction("LogIn");
         }
 
+        public IActionResult GoBack()
+        {
+            string previousUrl = HttpContext.Session.GetString("PreviousUrl");
+            if (previousUrl != null)
+            {
+                return Redirect(previousUrl);
+            }
+            return RedirectToAction("Index", "Account");
+        }
+
     }
 
 

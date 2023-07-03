@@ -231,6 +231,7 @@ namespace HomeDatabase.Database
         public DataSet ExecDataSet()
         {
             DataSet set = new DataSet();
+
             return set;
         }
 
@@ -273,7 +274,7 @@ namespace HomeDatabase.Database
 
                 // Set up a command with the given query and associate
                 // this with the current connection.
-                using (SqlCommand cmd = new SqlCommand("use Home\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ", con))
+                using (SqlCommand cmd = new SqlCommand("use HomeDB\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ", con))
                 {
                     using (IDataReader reader = cmd.ExecuteReader())
                     {

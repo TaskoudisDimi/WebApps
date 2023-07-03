@@ -6,15 +6,27 @@ using System.Diagnostics;
 
 namespace HomeDatabase.Controllers
 {
+    
     public class HomeDBController : Controller
     {
 
         public IActionResult Index()
         {
+            HttpContext.Session.SetString("PreviousUrl", HttpContext.Request.Headers["Referer"].ToString());
+
             List<TableViewModel> tables = SqlConnect.Instance.GetTables();
             return View(tables);
-
         }
+        public IActionResult GoBack()
+        {
+            string previousUrl = HttpContext.Session.GetString("PreviousUrl");
+            if (previousUrl != null)
+            {
+                return Redirect(previousUrl);
+            }
+            return RedirectToAction("Index", "HomeDB");
+        }
+
 
     }
 }

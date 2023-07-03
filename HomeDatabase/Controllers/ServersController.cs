@@ -1,14 +1,20 @@
 ﻿using HomeDatabase.Database;
 using HomeDatabase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 namespace HomeDatabase.Controllers
 {
+    
+    [Authorize]
     public class ServersController : Controller
     {
         public IActionResult Index()
         {
+
+            HttpContext.Session.SetString("PreviousUrl", HttpContext.Request.Headers["Referer"].ToString());
+
             DataTable servers = SqlConnect.Instance.SelectDataTable("Select * From Servers");
             List<ServersViewModel> list = servers.AsEnumerable()
                                 .Select(row => new ServersViewModel
@@ -107,6 +113,11 @@ namespace HomeDatabase.Controllers
             }
         }
 
+        public IActionResult GoBack()
+        {
+            
+            return RedirectToAction("Index", "Databases");
+        }
 
     }
 }

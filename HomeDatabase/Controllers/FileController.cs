@@ -26,22 +26,30 @@ namespace HomeDatabase.Controllers
 
         public IActionResult Download(string fileName)
         {
-            string filePath = Path.Combine(_env.WebRootPath, "Files", fileName);
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                string filePath = Path.Combine(_env.WebRootPath, "Files", fileName);
 
-            if (!System.IO.File.Exists(filePath))
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound();
+                }
+
+                var fileContent = System.IO.File.ReadAllBytes(filePath);
+                var contentType = "application/octet-stream";
+                var contentDisposition = new ContentDisposition
+                {
+                    FileName = fileName,
+                    Inline = false
+                };
+                Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+                return File(fileContent, contentType);
+            }
+            else
             {
                 return NotFound();
             }
-
-            var fileContent = System.IO.File.ReadAllBytes(filePath);
-            var contentType = "application/octet-stream";
-            var contentDisposition = new ContentDisposition
-            {
-                FileName = fileName,
-                Inline = false
-            };
-            Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-            return File(fileContent, contentType);
+                
         }
 
 
