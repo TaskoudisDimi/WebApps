@@ -5,23 +5,35 @@
 }
 
 
-<form asp-action="Login" method="post">
-    <div>
-        <label asp-for="Username">
-            Username:
-        </label>
-        <input asp-for="Username" required />
-    </div>
-    <div>
-        <label asp-for="Password">
-            Password:
-        </label>
-        <input asp-for="Password" required />
-    </div>
-    <div>
-        <input type="submit" value="Log In" />
-    </div>
-</form>
+<style>
+    .centered-container {
+        text-align: center;
+    }
+</style>
+
+
+<div class="centered-container">
+    <form asp-action="Login" method="post">
+        <div>
+            <label asp-for="Username">
+                Username:
+            </label>
+            <input asp-for="Username" required />
+        </div>
+        <div>
+            <label asp-for="Password">
+                Password:
+            </label>
+            <input asp-for="Password" required />
+        </div>
+        <div>
+            <input type="submit" value="Log In" class="btn btn-primary" />
+            <a href="@Url.Action("GoBack", "Account")" class="btn btn-primary">Back</a>
+        </div>
+    </form>
+</div>
+
+
 
 
 

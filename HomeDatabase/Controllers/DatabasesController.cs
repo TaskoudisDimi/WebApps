@@ -29,5 +29,16 @@ namespace HomeDatabase.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        public IActionResult Delete()
+        {
+            return View();
+        }
+
+
     }
 }

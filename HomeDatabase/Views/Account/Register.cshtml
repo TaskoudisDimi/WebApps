@@ -1,37 +1,44 @@
 ﻿@model RegisterViewModel
 
-<form asp-action="Register" method="post">
-    <div>
-        <label asp-for="Username">
-            Username:
-        </label>
-        <input asp-for="Username" required />
-    </div>
-    <div>
-        <label asp-for="Password">
-            Password:
-        </label>
-        <input asp-for="Password" required />
-    </div>
-    <div>
-        <label asp-for="ConfirmPassword">
-            ConfirmPassword:
-        </label>
-        <input asp-for="ConfirmPassword" required />
-    </div>
-    <div>
-        <label asp-for="Email">
-            Email:
-        </label>
-        <input asp-for="Email" required />
-    </div>
-    <div>
-        <input type="submit" value="Register" />
-    </div>
-    
-</form>
-<form>
-    <div>
-        <a href="@Url.Action("GoBack", "Account")" class="btn btn-primary">Back</a>
-    </div>
-</form>
+
+<style>
+    .centered-container {
+        text-align: center;
+    }
+
+</style>
+
+<div class="centered-container">
+    <form asp-action="Register" method="post">
+        <div>
+            <label asp-for="Username">
+                Username:
+            </label>
+            <input asp-for="Username" required />
+        </div>
+        <div>
+            <label asp-for="Password">
+                Password:
+            </label>
+            <input asp-for="Password" required />
+        </div>
+        <div>
+            <label asp-for="ConfirmPassword">
+                ConfirmPassword:
+            </label>
+            <input asp-for="ConfirmPassword" required />
+        </div>
+        <div>
+            <label asp-for="Email">
+                Email:
+            </label>
+            <input asp-for="Email" required />
+        </div>
+        <div>
+            <input type="submit" value="Register" class="btn btn-primary" />
+            <a href="@Url.Action("GoBack", "Account")" class="btn btn-primary">Back</a>
+        </div>
+    </form>
+</div>
+
+

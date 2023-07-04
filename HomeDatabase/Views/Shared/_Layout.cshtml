@@ -32,7 +32,7 @@
                     <ul class="nav-item navbar-right">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <p>Welcome, <span>@User.FindFirstValue(ClaimTypes.Name)</span>!</p>
+                            <a>Welcome, <span>@User.FindFirstValue(ClaimTypes.Name)</span>!</a>
                             <a href="/Account/Logout">Logout</a> 
                         }
                         else

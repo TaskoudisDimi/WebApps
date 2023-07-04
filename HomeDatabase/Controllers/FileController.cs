@@ -26,6 +26,7 @@ namespace HomeDatabase.Controllers
 
         public IActionResult Download(string fileName)
         {
+            
             if (!string.IsNullOrEmpty(fileName))
             {
                 string filePath = Path.Combine(_env.WebRootPath, "Files", fileName);

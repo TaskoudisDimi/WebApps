@@ -33,7 +33,7 @@ namespace HomeDatabase
             {
                 options.Cookie.Name = "HomeDatabase.AuthCookie";
                 options.LoginPath = "/Account/LogIn";
-                //options.AccessDeniedPath = "/Account/AccessDenied";
+                options.AccessDeniedPath = "/Account/AccessDenied";
             });
             services.AddAuthorization();
 
