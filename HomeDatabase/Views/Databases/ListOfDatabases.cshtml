@@ -1,52 +1,35 @@
 ﻿
 
-<form>
-    <div class="top-left-button">
-        <a href="@Url.Action("GoBack", "Databases")" class="btn btn-primary">Back</a>
-    </div>
-</form>
 
-<style>
-    .top-left-button {
-        position: fixed;
-        top: calc(0 + 60px); 
-        left: 0;
-    }
 
-    .centered-container {
-        text-align: center;
-    }
-
-</style>
 
 
 <div class="text-center align-text-top">
     <h3>Databases</h3>
-       
 </div>
 
-<div class="centered-container">
+<div class="text-center mt-5">
     <ul>
         @foreach (var databases in Model)
         {
             if (databases.Name != null)
             {
-                <li>
-                    <a class="btn btn-primary mt-1" asp-area="" asp-action="Tables" asp-controller="Databases"
+                <li class="mt-2" style="list-style-type: none;">
+                    <a class="btn btn-primary" asp-area="" asp-action="database" asp-controller="Databases"
                asp-route-Name="@databases.Name">@databases.Name</a>
                 </li>
+                
             }
 
         }
     </ul>
 </div>
 
-<a class="btn btn-primary" asp-area="" asp-action="Create" asp-controller="Databases">Create new Database</a>
-<a class="btn btn-primary mt-1" asp-area="" asp-action="Delete" asp-controller="Databases">Delete Database</a>
+<div>
+    <a class="btn btn-primary" asp-area="" asp-action="Create" asp-controller="Databases">Create new Database</a>
+    <a class="btn btn-danger" asp-area="" asp-action="Delete" asp-controller="Databases">Delete Database</a>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Databases")">Back</a>
+    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
+</div>
 
 
-<form>
-    <div>
-        <input asp-controller="File" asp-action="Download" type="submit" value="Download" />
-    </div>
-</form>

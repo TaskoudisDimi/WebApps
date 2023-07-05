@@ -23,7 +23,7 @@ namespace HomeDatabase.Controllers
                                     Name = row["Name"].ToString()
                                 })
                                 .ToList();
-
+            
             return View(list);
         }
 

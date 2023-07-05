@@ -1,34 +1,39 @@
 ﻿
 
-<a class="btn btn-primary mt-1" asp-area="" asp-page="">Create new Table</a>
-<a class="btn btn-primary mt-1" asp-area="" asp-page="">Delete Table</a>
 
-<ul>
-    @foreach (var tables in Model)
-    {
-        string modelName = "";
-        if (tables.TableName != null)
+
+
+
+<div class="text-center align-text-top">
+    <h3>Tables of Database: HomeDB</h3>
+</div>
+
+<div class="text-center mt-2">
+    <ul>
+        @foreach (var tables in Model)
         {
-            if (tables.TableName == "Servers")
+            string modelName = "";
+            if (tables.TableName != null)
             {
-                modelName = "Servers";
+                if (tables.TableName == "Servers")
+                {
+                    modelName = "Servers";
+                }
+                     <li class="mt-2" style="list-style-type: none;">
+                        <a class="btn btn-primary mt-1" asp-area="" asp-action="Index" asp-controller="@modelName">@tables.TableName</a>
+                    </li>
             }
-            <li>
-                <a class="btn btn-primary mt-1" asp-area="" asp-action="Index" asp-controller="@modelName">@tables.TableName</a>
-            </li>
+
         }
-
-    }
 </ul>
+</div>
 
-<form>
-    <div>
-        <a href="@Url.Action("GoBack", "HomeDB")" class="btn btn-primary">Back</a>
-    </div>
-</form>
 
-<form>
-    <div>
-        <input asp-controller="File" asp-action="Download" type="submit" value="Download" />
-    </div>
-</form>
+<div>
+    <a class="btn btn-primary" asp-area="" asp-page="">Create new Table</a>
+    <a class="btn btn-danger" asp-area="" asp-page="">Delete Table</a>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
+</div>
+
+
