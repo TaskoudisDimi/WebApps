@@ -1,37 +1,29 @@
 ﻿
 
 
-
-
-
 <div class="text-center align-text-top">
     <h3>Tables of Database: HomeDB</h3>
 </div>
 
-<div class="text-center mt-2">
-    <ul>
-        @foreach (var tables in Model)
-        {
-            string modelName = "";
-            if (tables.TableName != null)
-            {
-                if (tables.TableName == "Servers")
-                {
-                    modelName = "Servers";
-                }
-                     <li class="mt-2" style="list-style-type: none;">
-                        <a class="btn btn-primary mt-1" asp-area="" asp-action="Index" asp-controller="@modelName">@tables.TableName</a>
-                    </li>
-            }
 
+<table class="table">
+    <tbody>
+        @foreach (var table in Model)
+        {
+            <tr>
+                <td>@table.TableName</td>
+                <td>
+                    <a class="btn btn-secondary" asp-action="Index" asp-route-id="@table.TableName" asp-controller="Servers">Select</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@table.TableName" asp-controller="HomeDB" >Delete</a>
+                </td>
+            </tr>
         }
-</ul>
-</div>
+    </tbody>
+</table>
 
 
 <div>
-    <a class="btn btn-primary" asp-area="" asp-page="">Create new Table</a>
-    <a class="btn btn-danger" asp-area="" asp-page="">Delete Table</a>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="HomeDB">Create new Table</a>
     <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
 </div>

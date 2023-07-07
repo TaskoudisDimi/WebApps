@@ -27,6 +27,23 @@ namespace HomeDatabase.Controllers
             return RedirectToAction("Index", "HomeDB");
         }
 
+        public IActionResult Create()
+        {
+            //Create Table on Home DB
+            return View();
+        }
+
+        public IActionResult Delete()
+        {
+            //Drop Table on Home DB
+            return View();
+        }
+
+
+
+
+
+
 
     }
 }

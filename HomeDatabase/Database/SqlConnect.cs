@@ -227,7 +227,6 @@ namespace HomeDatabase.Database
             return dt;
         }
 
-
         public DataSet ExecDataSet()
         {
             DataSet set = new DataSet();
