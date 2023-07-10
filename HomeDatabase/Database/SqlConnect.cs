@@ -235,9 +235,9 @@ namespace HomeDatabase.Database
         }
 
         //Get Databases
-        public List<Databases> GetDatabaseList()
+        public List<DatabasesModel> GetDatabaseList()
         {
-            List<Databases> listDB = new List<Databases>();
+            List<DatabasesModel> listDB = new List<DatabasesModel>();
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -245,14 +245,15 @@ namespace HomeDatabase.Database
 
                 // Set up a command with the given query and associate
                 // this with the current connection.
-                using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
+                using (SqlCommand cmd = new SqlCommand("SELECT database_id, name from sys.databases", con))
                 {
                     using (IDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Databases databases = new Databases();
+                            DatabasesModel databases = new DatabasesModel();
                             databases.Name = reader["Name"].ToString();
+                            databases.id = Convert.ToInt32(reader["database_id"]);
                             if (!databases.Name.Contains("master") && !databases.Name.Contains("tempdb") && !databases.Name.Contains("model") &&
                                 !databases.Name.Contains("msdb"))
                                 listDB.Add(databases);

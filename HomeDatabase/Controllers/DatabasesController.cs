@@ -11,11 +11,11 @@ namespace HomeDatabase.Controllers
         [Authorize]
         public IActionResult ListOfDatabases()
         {
-            List<Databases> databases = SqlConnect.Instance.GetDatabaseList();
+            List<DatabasesModel> databases = SqlConnect.Instance.GetDatabaseList();
             return View(databases);
         }
 
-        public IActionResult database(Databases database)
+        public IActionResult database(DatabasesModel database)
         {
             
             return RedirectToAction("Index", $"{database.Name}");
@@ -29,6 +29,12 @@ namespace HomeDatabase.Controllers
 
         public IActionResult Create()
         {
+
+            return View();
+        }
+
+        public IActionResult CreateDatabase(DatabasesModel database)
+        {
             if (SqlConnect.Instance.Insert($"Insert Into Test") > 0)
             {
                 return View();
@@ -39,17 +45,14 @@ namespace HomeDatabase.Controllers
             }
         }
 
-        public IActionResult Delete(ServersViewModel server)
+        public IActionResult Delete(DatabasesModel database)
         {
-            if (SqlConnect.Instance.Delete($"Delete from Test where id = {server.Id}") > 0)
-            {
-                return View();
-            }
-            else
-            {
-                return NotFound();
-            }
+            
+
+            return View(database);
         }
+
+        
 
 
     }

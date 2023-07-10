@@ -1,4 +1,36 @@
-﻿
+﻿@model TableViewModel
+
+<form method="post" asp-action="Delete">
+    <input asp-for="TableName" hidden/>
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">
+                Delete Server
+            </h2>
+        </div>
+        <div class="mb-3">
+            <label asp-for="TableName">
+            </label>
+            <input asp-for="TableName" disabled class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="TableName"></label>
+            <input asp-for="TableName" disabled class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
+        <a asp-controller="Servers" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back To List
+        </a>
+    </div>
+</form>
+
+
+
+
+
+
+
+
 
 
 
