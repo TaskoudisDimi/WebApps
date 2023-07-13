@@ -1,29 +1,130 @@
 ﻿
 
-<table class="table">
-    <thead>
-        <tr>
-            Column Name
-        </tr>
-        <tr>
-            Data Type
-        </tr>
-        <tr>
-            Allow Nulls
-        </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
+<div class="title text-center align-text-top">
+    <h4>Create Table</h4>
+</div>
 
 
-</table>
+@*<form>
+    <table class="table border p-3 mt-4">
+        <thead>
+            <tr>
+                Column Name
+            </tr>
+            <tr>
+                Data Type
+            </tr>
+            <tr>
+                <input type="checkbox" id="myCheckbox" name="myCheckbox" />
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    Test1
+                    <label for="myCheckbox">Check me</label>
+                
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Test2
+                    <label for="myCheckbox">Check me</label>
+                
+                </th>
+            </tr>
+        </tbody>
 
+    </table>
+</form>
 
 
 <div>
     <a class="btn btn-primary" asp-action="Create" asp-controller="HomeDB"> Create Table </a>
-</div>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+</div>*@
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dynamic Table</title>
+</head>
+<body>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>Column 1</th>
+                <th>Column 2</th>
+                <th>Column 3</th>
+                <!-- Add more column headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Existing table rows -->
+        </tbody>
+    </table>
+
+    <button id="addRowButton">Add Row</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var addRowButton = document.getElementById('addRowButton');
+            var tableBody = document.querySelector('#myTable tbody');
+
+            addRowButton.addEventListener('click', function () {
+                var newRow = document.createElement('tr');
+                var cell1 = document.createElement('td');
+                var cell2 = document.createElement('td');
+                var cell3 = document.createElement('td');
+                var input1 = document.createElement('input');
+                var select = document.createElement('select');
+
+                // Set attributes for the input element
+                input1.type = 'text';
+                input1.name = 'column1';
+
+                // Create and add options with checkboxes to the select element
+                var option1 = document.createElement('option');
+                var checkbox1 = document.createElement('input');
+                checkbox1.type = 'checkbox';
+                checkbox1.value = 'option1';
+                option1.appendChild(checkbox1);
+                option1.appendChild(document.createTextNode('Option 1'));
+
+                var option2 = document.createElement('option');
+                var checkbox2 = document.createElement('input');
+                checkbox2.type = 'checkbox';
+                checkbox2.value = 'option2';
+                option2.appendChild(checkbox2);
+                option2.appendChild(document.createTextNode('Option 2'));
+
+                // Append the options to the select element
+                select.appendChild(option1);
+                select.appendChild(option2);
+
+                // Append the input and select to the cells
+                cell1.appendChild(input1);
+                cell2.appendChild(select);
+
+                // Append the cells to the new row
+                newRow.appendChild(cell1);
+                newRow.appendChild(cell2);
+                newRow.appendChild(cell3);
+
+                // Append the new row to the table body
+                tableBody.appendChild(newRow);
+            });
+        });
+    </script>
+</body>
+</html>
+
 
 
 
