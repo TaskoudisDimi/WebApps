@@ -316,6 +316,83 @@ namespace HomeDatabase.Database
             }
         }
 
-        
+        public void CreateTable()
+        {
+            //Create Table from the Database View
+        }
+
+        public void DeleteTable()
+        {
+            //Delete Table from the Database View
+        }
+
+
+        public void CleanDB()
+        {
+            using (connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_CleanDatabaseTables", connection))
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+        }
+
+
+
+
+        public void RestoreDB(string pathDB)
+        {
+            try
+            {
+                using (connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand useMaster = new SqlCommand("USE master", connection))
+                    {
+                        useMaster.ExecuteNonQuery();
+                    }
+                    string restoreDB = $"RESTORE DATABASE smarketdb FROM DISK = '{pathDB}' WITH REPLACE, RECOVERY";
+                    using (SqlCommand command = new SqlCommand(restoreDB, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        public void backup(string path)
+        {
+            try
+            {
+                CheckConnection();
+                string query = "BACKUP DATABASE smarketdb TO DISK = '" + path + "\\backupfile.bak' WITH FORMAT,MEDIANAME = 'Z_SQLServerBackups',NAME = 'Full Backup of Testdb';";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+
+
+
+
     }
 }

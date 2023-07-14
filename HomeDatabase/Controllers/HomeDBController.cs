@@ -27,7 +27,7 @@ namespace HomeDatabase.Controllers
             return RedirectToAction("Index", "HomeDB");
         }
 
-        public IActionResult Create()
+        public IActionResult Create(List<TableViewModel> tableData)
         {
             //Create Table on Home DB
             return View();
@@ -38,9 +38,19 @@ namespace HomeDatabase.Controllers
             //Drop Table on Home DB
             return View();
         }
-
-
-
+        
+        public string CleanDB()
+        {
+            return "success";
+        }
+        public string RestoreDB()
+        {
+            return "success";
+        }
+        public string BackupDB()
+        {
+            return "success";
+        }
 
 
     }

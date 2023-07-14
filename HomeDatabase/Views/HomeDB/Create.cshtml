@@ -5,35 +5,19 @@
 </div>
 
 
-@*<form>
-    <table class="table border p-3 mt-4">
+<form id="myForm" method="post" asp-action="Create" asp-controller="HomeDB">
+
+    <table class="table border p-3 mt-4" id="myTable">
         <thead>
             <tr>
-                Column Name
-            </tr>
-            <tr>
-                Data Type
-            </tr>
-            <tr>
-                <input type="checkbox" id="myCheckbox" name="myCheckbox" />
-                
+                <th>Column Name</th>
+                <th>Data Type</th>
+                <th>Allow Nulls</th>
+                <th>Primary Key</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th>
-                    Test1
-                    <label for="myCheckbox">Check me</label>
-                
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    Test2
-                    <label for="myCheckbox">Check me</label>
-                
-                </th>
-            </tr>
+            
         </tbody>
 
     </table>
@@ -41,89 +25,130 @@
 
 
 <div>
-    <a class="btn btn-primary" asp-action="Create" asp-controller="HomeDB"> Create Table </a>
+    <button class="btn btn-primary" id="addRowButton">Add Row</button>
+    <a class="btn btn-primary" id="submitBtn" asp-action="Create" asp-controller="HomeDB"> Create Table </a>
     <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
-</div>*@
+</div>
 
-@{
-    Layout = null;
-}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Dynamic Table</title>
-</head>
-<body>
-    <table id="myTable">
-        <thead>
-            <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-                <!-- Add more column headers as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Existing table rows -->
-        </tbody>
-    </table>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var addRowButton = document.getElementById('addRowButton');
+        var tableBody = document.querySelector('#myTable tbody');
 
-    <button id="addRowButton">Add Row</button>
+        addRowButton.addEventListener('click', function () {
+            var newRow = document.createElement('tr');
+            var cell1 = document.createElement('td');
+            var cell2 = document.createElement('td');
+            var cell3 = document.createElement('td');
+            var cell4 = document.createElement('td');
+            var input1 = document.createElement('input');
+            var select = document.createElement('select');
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var addRowButton = document.getElementById('addRowButton');
-            var tableBody = document.querySelector('#myTable tbody');
 
-            addRowButton.addEventListener('click', function () {
-                var newRow = document.createElement('tr');
-                var cell1 = document.createElement('td');
-                var cell2 = document.createElement('td');
-                var cell3 = document.createElement('td');
-                var input1 = document.createElement('input');
-                var select = document.createElement('select');
+            // Set attributes for the input element
+            input1.type = 'text';
+            input1.name = 'column1';
 
-                // Set attributes for the input element
-                input1.type = 'text';
-                input1.name = 'column1';
+             // second column
+            var option1 = document.createElement('option');
+            var checkbox1 = document.createElement('input');
+            checkbox1.type = 'checkbox';
+            option1.appendChild(checkbox1);
+            option1.appendChild(document.createTextNode('int'));
 
-                // Create and add options with checkboxes to the select element
-                var option1 = document.createElement('option');
-                var checkbox1 = document.createElement('input');
-                checkbox1.type = 'checkbox';
-                checkbox1.value = 'option1';
-                option1.appendChild(checkbox1);
-                option1.appendChild(document.createTextNode('Option 1'));
+            var option2 = document.createElement('option');
+            var checkbox2 = document.createElement('input');
+            checkbox2.type = 'checkbox';
+            option2.appendChild(checkbox2);
+            option2.appendChild(document.createTextNode('varchar'));
 
-                var option2 = document.createElement('option');
-                var checkbox2 = document.createElement('input');
-                checkbox2.type = 'checkbox';
-                checkbox2.value = 'option2';
-                option2.appendChild(checkbox2);
-                option2.appendChild(document.createTextNode('Option 2'));
+            // third column
+            var checkbox3 = document.createElement('input');
+            checkbox3.type = 'checkbox';
+            checkbox3.name = 'column3';
+            var label1 = document.createElement('label');
+            label1.appendChild(checkbox3);
 
-                // Append the options to the select element
-                select.appendChild(option1);
-                select.appendChild(option2);
+            // last column
+            var checkbox4 = document.createElement('input');
+            checkbox4.type = 'checkbox';
+            checkbox4.name = 'column4';
+            var label2 = document.createElement('label');
+            label2.appendChild(checkbox4);
 
-                // Append the input and select to the cells
-                cell1.appendChild(input1);
-                cell2.appendChild(select);
+            // Append the options to the select element
+            select.appendChild(option1);
+            select.appendChild(option2);
 
-                // Append the cells to the new row
-                newRow.appendChild(cell1);
-                newRow.appendChild(cell2);
-                newRow.appendChild(cell3);
+            // Append the input and checkboxes to the cells
+            cell1.appendChild(input1);
+            cell2.appendChild(select);
+            cell3.appendChild(label1);
+            cell4.appendChild(label2);
 
-                // Append the new row to the table body
-                tableBody.appendChild(newRow);
-            });
+            // Append the cells to the new row
+            newRow.appendChild(cell1);
+            newRow.appendChild(cell2);
+            newRow.appendChild(cell3);
+            newRow.appendChild(cell4);
+
+            // Append the new row to the table body
+            tableBody.appendChild(newRow);
         });
-    </script>
-</body>
-</html>
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var submitBtn = document.getElementById('submitBtn');
+        submitBtn.addEventListener('click', function () {
+            var tableData = collectTableData();
+            sendDataToController(tableData);
+        });
+    });
+
+    function collectTableData() {
+        var tableBody = document.querySelector('#myTable tbody');
+        var rows = tableBody.getElementsByTagName('tr');
+        var data = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var cells = row.getElementsByTagName('td');
+
+            var rowData = {
+                columnName: cells[0].querySelector('input').value,
+                dataType: cells[1].querySelector('select').value,
+                allowNulls: cells[2].querySelector('input').checked
+            };
+
+            data.push(rowData);
+        }
+
+        return data;
+    }
+
+    function sendDataToController(data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', document.getElementById('myForm').action);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Success
+                    console.log('Data sent successfully');
+                } else {
+                    // Error
+                    console.error('Error sending data');
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify(data));
+    }
+</script>
+
+
 
 
 
