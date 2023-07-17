@@ -4,36 +4,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <style>
     .centered-container {
         text-align: center;
     }
-</style>
 
+    .form-group {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .form-group label {
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+    .btn {
+        margin-right: 10px;
+    }
+
+</style>
 
 <div class="centered-container">
     <form asp-action="Login" method="post">
-        <div>
-            <label asp-for="Username">
-                Username:
-            </label>
+        <div class="form-group">
+            <label asp-for="Username">Username:</label>
             <input asp-for="Username" required />
         </div>
-        <div>
-            <label asp-for="Password">
-                Password:
-            </label>
+        <div class="form-group">
+            <label asp-for="Password">Password:</label>
             <input asp-for="Password" required />
         </div>
-        <div>
+        <div class="form-group">
             <input type="submit" value="Log In" class="btn btn-primary" />
             <a href="@Url.Action("GoBack", "Account")" class="btn btn-primary">Back</a>
+            <a href="@Url.Action("Register", "Account")" class="btn btn-primary">Register</a>
         </div>
     </form>
 </div>
-
-
-
-
-

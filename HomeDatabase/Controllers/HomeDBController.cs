@@ -1,8 +1,10 @@
-﻿using HomeDatabase.Database;
+﻿using Azure;
+using HomeDatabase.Database;
 using HomeDatabase.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Diagnostics;
+using System.Net.Sockets;
 
 namespace HomeDatabase.Controllers
 {
@@ -39,17 +41,32 @@ namespace HomeDatabase.Controllers
             return View();
         }
         
-        public string CleanDB()
+        public IActionResult CleanDB()
         {
-            return "success";
+            if (SqlConnect.Instance.CleanDB())
+                return RedirectToAction("Success", "HomeDB");
+            else
+                return RedirectToAction("Error", "HomeDB");
         }
+
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+
         public string RestoreDB()
         {
             return "success";
         }
-        public string BackupDB()
+
+
+        public IActionResult BackupDB()
         {
-            return "success";
+            if (SqlConnect.Instance.Backup("HomeDB"))
+                return RedirectToAction("Success", "HomeDB");
+            else
+                return RedirectToAction("Error", "HomeDB");
         }
 
 

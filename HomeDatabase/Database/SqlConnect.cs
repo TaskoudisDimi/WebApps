@@ -16,9 +16,6 @@ namespace HomeDatabase.Database
     public class SqlConnect
     {
 
-        //public DataTable table = new DataTable();
-        //private DataTable dt;
-
         public static int queryTimeOut = 20;
         static Dictionary<int, SqlConnect> instances = new Dictionary<int, SqlConnect>();
         private static int instanceID;
@@ -316,35 +313,34 @@ namespace HomeDatabase.Database
             }
         }
 
-        public void CreateTable()
-        {
-            //Create Table from the Database View
-        }
 
-        public void DeleteTable()
+        //Execute StoreProcedure
+        public bool CleanDB()
         {
-            //Delete Table from the Database View
-        }
-
-
-        public void CleanDB()
-        {
-            using (connection = new SqlConnection(connectionString))
+            bool result = false;
+            try
             {
-                using (SqlCommand command = new SqlCommand("SP_CleanDatabaseTables", connection))
+                using (connection = new SqlConnection(connectionString))
                 {
-                    connection.Open();
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.ExecuteNonQuery();
-                    connection.Close();
+                    using (SqlCommand command = new SqlCommand("SP_CleanDatabaseTables", connection))
+                    {
+                        connection.Open();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        result = true;
+                    }
                 }
             }
+            catch
+            {
+                result = false;
+            }
+            return result;
         }
 
 
-
-
-        public void RestoreDB(string pathDB)
+        public void RestoreDB(string pathDB, string NameOfDatabase)
         {
             try
             {
@@ -355,7 +351,7 @@ namespace HomeDatabase.Database
                     {
                         useMaster.ExecuteNonQuery();
                     }
-                    string restoreDB = $"RESTORE DATABASE smarketdb FROM DISK = '{pathDB}' WITH REPLACE, RECOVERY";
+                    string restoreDB = $"RESTORE DATABASE {NameOfDatabase} FROM DISK = '{pathDB}' WITH REPLACE, RECOVERY";
                     using (SqlCommand command = new SqlCommand(restoreDB, connection))
                     {
                         command.ExecuteNonQuery();
@@ -370,29 +366,30 @@ namespace HomeDatabase.Database
         }
 
 
-        public void backup(string path)
+        public bool Backup(string NameOfDatabase)
         {
+            bool result = false;
             try
             {
+                string appRootPath = AppContext.BaseDirectory;
                 CheckConnection();
-                string query = "BACKUP DATABASE smarketdb TO DISK = '" + path + "\\backupfile.bak' WITH FORMAT,MEDIANAME = 'Z_SQLServerBackups',NAME = 'Full Backup of Testdb';";
+                string query = $"BACKUP DATABASE {NameOfDatabase} TO DISK = '{appRootPath}' \\backupfile.bak' WITH FORMAT,MEDIANAME = 'Z_SQLServerBackups',NAME = 'Full Backup of Testdb';";
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.ExecuteNonQuery();
-                
+                result = true;
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                result = false;
             }
             finally
             {
                 CloseConnection();
             }
+            return result;
         }
-
-
-
-
 
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace HomeDatabase.Database
+﻿using HomeDatabase.Models;
+
+namespace HomeDatabase.Database
 {
     public class CheckSchemaDB
     {

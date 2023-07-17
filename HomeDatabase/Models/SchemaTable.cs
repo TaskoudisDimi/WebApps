@@ -1,4 +1,4 @@
-﻿namespace HomeDatabase.Database
+﻿namespace HomeDatabase.Models
 {
     public class SchemaTable
     {

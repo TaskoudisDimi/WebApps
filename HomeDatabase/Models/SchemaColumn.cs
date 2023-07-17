@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace HomeDatabase.Database
+namespace HomeDatabase.Models
 {
     public class SchemaColumn
     {

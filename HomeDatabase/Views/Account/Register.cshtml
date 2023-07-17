@@ -6,37 +6,55 @@
         text-align: center;
     }
 
+    .form-group {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .form-group label {
+            width: 100px;
+            text-align: left;
+            margin-right: 50px;
+        }
+
+    .btn {
+        margin-right: 10px;
+    }
+
 </style>
 
 <div class="centered-container">
     <form asp-action="Register" method="post">
-        <div>
+        <div class="form-group">
             <label asp-for="Username">
                 Username:
             </label>
             <input asp-for="Username" required />
         </div>
-        <div>
+        <div class="form-group">
             <label asp-for="Password">
                 Password:
             </label>
             <input asp-for="Password" required />
         </div>
-        <div>
+        <div class="form-group">
             <label asp-for="ConfirmPassword">
                 ConfirmPassword:
             </label>
             <input asp-for="ConfirmPassword" required />
         </div>
-        <div>
+        <div class="form-group">
             <label asp-for="Email">
                 Email:
             </label>
             <input asp-for="Email" required />
         </div>
-        <div>
+        <div class="form-group">
             <input type="submit" value="Register" class="btn btn-primary" />
             <a href="@Url.Action("GoBack", "Account")" class="btn btn-primary">Back</a>
+            <a href="@Url.Action("LogIn", "Account")" class="btn btn-primary">Log In</a>
         </div>
     </form>
 </div>

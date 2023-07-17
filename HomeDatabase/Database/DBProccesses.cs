@@ -4,6 +4,15 @@
     {
 
         //Create/Delete Database
+        public void CreateDatabase()
+        {
+
+        }
+
+        public void DeleteDatabase()
+        {
+
+        }
 
 
 

@@ -6,5 +6,16 @@
         //Create/Update/Delete (CRUD) Tables
 
 
+        public void CreateTable()
+        {
+
+        }
+
+        public void DeleteTable()
+        {
+
+        }
+
+
     }
 }
