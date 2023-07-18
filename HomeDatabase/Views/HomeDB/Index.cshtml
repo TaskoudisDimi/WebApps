@@ -1,5 +1,4 @@
-﻿
-
+﻿@model List<TableViewModel>
 
 <div class="text-center align-text-top">
     <h3>Tables of Database: HomeDB</h3>
@@ -11,10 +10,11 @@
         @foreach (var table in Model)
         {
             <tr>
+               
                 <td>@table.TableName</td>
                 <td>
                     <a class="btn btn-secondary" asp-action="Index" asp-route-id="@table.TableName" asp-controller="Servers">Select</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@table.TableName" asp-controller="HomeDB" >Delete</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-controller="HomeDB" asp-route-Name="@table.TableName">Delete</a>
                 </td>
             </tr>
         }
@@ -27,7 +27,9 @@
     <a class="btn btn-primary" id="submitBtn" asp-action="CleanDB" asp-controller="HomeDB"> Clean Database </a>
     <a class="btn btn-primary" id="submitBtn" asp-action="RestoreDB" asp-controller="HomeDB"> Restore Database </a>
     <a class="btn btn-primary" id="submitBtn" asp-action="Backup" asp-controller="HomeDB"> Backup Database </a>
-    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+    <a asp-controller="HomeDB" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        Back
+    </a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
 </div>
 

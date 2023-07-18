@@ -1,6 +1,7 @@
 ﻿using Azure;
 using HomeDatabase.Database;
 using HomeDatabase.Models;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Diagnostics;
@@ -35,11 +36,28 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
-        public IActionResult Delete()
+        public IActionResult Delete(string TableName)
         {
-            //Drop Table on Home DB
-            return View();
+            List<TableViewModel> tableToDelete = SqlConnect.Instance.GetTables("Servers");
+            TableViewModel table = tableToDelete.FirstOrDefault();
+            if(table != null)
+            {
+                return View(table);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
+
+
+        //[HttpPost]
+        //public IActionResult Delete(TableViewModel tableData)
+        //{
+            
+            
+        //}
         
         public IActionResult CleanDB()
         {

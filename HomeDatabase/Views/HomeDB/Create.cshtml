@@ -27,7 +27,9 @@
 <div>
     <button class="btn btn-primary" id="addRowButton">Add Row</button>
     <a class="btn btn-primary" id="submitBtn" asp-action="Create" asp-controller="HomeDB"> Create Table </a>
-    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+    <a asp-controller="HomeDB" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        Back To List
+    </a>
 </div>
 
 

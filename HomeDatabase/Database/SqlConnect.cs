@@ -262,7 +262,7 @@ namespace HomeDatabase.Database
         }
 
         //Get Tables
-        public List<TableViewModel> GetTables()
+        public List<TableViewModel> GetTables(string table = null)
         {
             List<TableViewModel> listServers = new List<TableViewModel>();
             using (SqlConnection con = new SqlConnection(connectionString))
@@ -271,18 +271,37 @@ namespace HomeDatabase.Database
 
                 // Set up a command with the given query and associate
                 // this with the current connection.
-                using (SqlCommand cmd = new SqlCommand("use HomeDB\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ", con))
+                if(table == null)
                 {
-                    using (IDataReader reader = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("use HomeDB\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ", con))
                     {
-                        while (reader.Read())
+                        using (IDataReader reader = cmd.ExecuteReader())
                         {
-                            TableViewModel databases = new TableViewModel();
-                            databases.TableName = reader["TABLE_NAME"].ToString();
-                            listServers.Add(databases);
+                            while (reader.Read())
+                            {
+                                TableViewModel databases = new TableViewModel();
+                                databases.TableName = reader["TABLE_NAME"].ToString();
+                                listServers.Add(databases);
+                            }
                         }
                     }
                 }
+                else
+                {
+                    using (SqlCommand cmd = new SqlCommand($"use HomeDB\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{table}'", con))
+                    {
+                        using (IDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                TableViewModel databases = new TableViewModel();
+                                databases.TableName = reader["TABLE_NAME"].ToString();
+                                listServers.Add(databases);
+                            }
+                        }
+                    }
+                }
+                
             }
 
             return listServers;
