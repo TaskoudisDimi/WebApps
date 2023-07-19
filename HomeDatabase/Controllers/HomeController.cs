@@ -28,5 +28,19 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
+
+        [HttpGet("/Home/HandleError")]
+        public IActionResult HandleError(int? statusCode = null)
+        {
+            if (statusCode.HasValue && statusCode == 404)
+            {
+                return View("NotFound");
+            }
+            // You can add additional cases for other status codes if needed
+            // For example, you can create custom views for 500 Internal Server Errors, etc.
+
+            return View("Error"); // A fallback error view for other status codes.
+        }
+
     }
 }

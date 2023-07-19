@@ -36,11 +36,12 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Delete(string TableName)
         {
             List<TableViewModel> tableToDelete = SqlConnect.Instance.GetTables("Servers");
-            TableViewModel table = tableToDelete.FirstOrDefault();
-            if(table != null)
+            TableViewModel table = tableToDelete.FirstOrDefault(t => t.TableName == TableName);
+            if (table != null)
             {
                 return View(table);
             }
@@ -48,17 +49,23 @@ namespace HomeDatabase.Controllers
             {
                 return NotFound();
             }
-            
         }
 
 
-        //[HttpPost]
-        //public IActionResult Delete(TableViewModel tableData)
-        //{
-            
-            
-        //}
         
+        public IActionResult DeleteTable(string TableName)
+        {
+            if (SqlConnect.Instance.Delete($"Drop Table {TableName}") > 0)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
         public IActionResult CleanDB()
         {
             if (SqlConnect.Instance.CleanDB())

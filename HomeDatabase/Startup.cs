@@ -58,6 +58,9 @@ namespace HomeDatabase
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseStatusCodePagesWithReExecute("/Home/HandleError", "?statusCode={0}");
+
             app.UseStaticFiles();
             app.UseRouting();
 

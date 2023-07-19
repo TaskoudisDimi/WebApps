@@ -47,12 +47,23 @@ namespace HomeDatabase.Controllers
 
         public IActionResult Delete(DatabasesModel database)
         {
-            
-
             return View(database);
         }
 
-        
+
+        public IActionResult DeleteDatabase(DatabasesModel Database)
+        {
+            if (SqlConnect.Instance.Delete($"Drop Database where database_id {Database.id}") > 0)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
 
 
     }

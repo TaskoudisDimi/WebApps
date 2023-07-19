@@ -15,7 +15,7 @@
                 <td>@server.Name</td>
                 <td>
                     <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Edit</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-controller="Servers" asp-route-Name="@server.Name">Delete</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Delete</a>
                 </td>
             </tr>
         }
