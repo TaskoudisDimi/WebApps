@@ -2,8 +2,6 @@
 {
     public class TableViewModel
     {
-       
-
         public string TableName { get; set; }
     }
 }
