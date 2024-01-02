@@ -1,0 +1,36 @@
+﻿@model List<ServersViewModel>
+
+
+
+<div>
+    <h1>Servers</h1>
+</div>
+
+<table class="table">
+    <tbody>
+        @foreach (var server in Model)
+        {
+            <tr>
+              
+                <td>@server.Name</td>
+                <td>
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="Servers">Add</a>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
+</div>
+
+
+
+
+
+
+

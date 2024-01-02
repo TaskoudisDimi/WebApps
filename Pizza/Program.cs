@@ -1,6 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Pizza.Data;
 
+
+///
+/// MVVM Pattern Project
+///
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

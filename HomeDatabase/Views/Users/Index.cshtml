@@ -1,0 +1,36 @@
+﻿@model List<UsersViewModel>
+
+
+
+<div>
+    <h1>Users</h1>
+</div>
+
+<table class="table">
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+
+                <td>@user.Username</td>
+                <td>
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@user.Id" asp-controller="Users" asp-route-Name="@user.Username">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@user.Id" asp-controller="Users" asp-route-Name="@user.Username">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="Users">Add</a>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
+</div>
+
+
+
+
+
+
+

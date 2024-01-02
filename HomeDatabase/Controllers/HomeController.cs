@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace HomeDatabase.Controllers
 {
 
-   
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
             HttpContext.Session.SetString("PreviousUrl", HttpContext.Request.Headers["Referer"].ToString());
-
             return View();
         }
 

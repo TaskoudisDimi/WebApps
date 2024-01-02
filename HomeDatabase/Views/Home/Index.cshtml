@@ -1,11 +1,13 @@
 ﻿
 <div class="text-center bg-white">
     <p>
-        Hello to my Databases Manager!
+        Hello to my App!
     </p>
     @if (User.Identity.IsAuthenticated)
     {
         <a class="btn btn-primary" asp-area="" asp-action="ListOfDatabases" asp-controller="Databases">Databases</a>
+        <a class="btn btn-primary" asp-area="" asp-action="" asp-controller="Calendar">Calendar</a>
+        <a class="btn btn-primary" asp-area="" asp-action="ListOfDatabases" asp-controller="KeysController">Keys</a>
     }
     else
     {
