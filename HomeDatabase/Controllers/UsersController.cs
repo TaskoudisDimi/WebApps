@@ -17,7 +17,9 @@ namespace HomeDatabase.Controllers
                                 .Select(row => new UsersViewModel
                                 {
                                     Id = Convert.ToInt32(row["Id"]),
-                                    Username = row["Username"].ToString()
+                                    Username = row["Username"].ToString(),
+                                    Password = row["Password"].ToString(),
+                                    isAdmin = Convert.ToBoolean(row["isAdmin"])
                                 })
                                 .ToList();
 

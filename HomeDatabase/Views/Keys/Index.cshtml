@@ -1,21 +1,34 @@
-﻿@model List<ServersViewModel>
-
-
+﻿@model List<PasswordsViewModel>
 
 <div>
-    <h1>Servers</h1>
+    <h1>Keys</h1>
 </div>
 
 <table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Service</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
     <tbody>
-        @foreach (var server in Model)
+        @foreach (var key in Model)
         {
             <tr>
-              
-                <td>@server.Name</td>
+                <td>@key.Id</td>
+                <td>@key.FirstName</td>
+                <td>@key.LastName</td>
+                <td>@key.Username</td>
+                <td>@key.Password</td>
+                <td>@key.Service</td>
                 <td>
-                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Edit</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Delete</a>
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@key.Id" asp-controller="Keys" asp-route-Name="@key.FirstName">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@key.Id" asp-controller="Keys" asp-route-Name="@key.FirstName">Delete</a>
                 </td>
             </tr>
         }
@@ -23,14 +36,7 @@
 </table>
 
 <div>
-    <a class="btn btn-primary" asp-action="Create" asp-controller="Servers">Add</a>
-    <a class="btn btn-secondary" href="@Url.Action("GoBack", "HomeDB")">Back</a>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="Keys">Add</a>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Keys")">Back</a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
 </div>
-
-
-
-
-
-
-

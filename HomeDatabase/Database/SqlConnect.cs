@@ -273,7 +273,7 @@ namespace HomeDatabase.Database
                 // this with the current connection.
                 if(table == null)
                 {
-                    using (SqlCommand cmd = new SqlCommand("use HomeDB\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ", con))
+                    using (SqlCommand cmd = new SqlCommand("use HomeDB\r\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where TABLE_NAME <> 'Passwords' and TABLE_NAME <> 'Events'", con))
                     {
                         using (IDataReader reader = cmd.ExecuteReader())
                         {

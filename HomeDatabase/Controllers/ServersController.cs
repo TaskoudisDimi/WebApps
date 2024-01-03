@@ -27,7 +27,6 @@ namespace HomeDatabase.Controllers
             return View(list);
         }
 
-
         public IActionResult Create()
         {
             return View();

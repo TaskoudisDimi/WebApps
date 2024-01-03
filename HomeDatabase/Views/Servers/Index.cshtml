@@ -7,11 +7,15 @@
 </div>
 
 <table class="table">
+    <thead>
+        <th>ID</th>
+        <th>Name</th>
+    </thead>
     <tbody>
         @foreach (var server in Model)
         {
             <tr>
-              
+                <td>@server.Id</td>
                 <td>@server.Name</td>
                 <td>
                     <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@server.Id" asp-controller="Servers" asp-route-Name="@server.Name">Edit</a>

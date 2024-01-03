@@ -7,12 +7,21 @@
 </div>
 
 <table class="table">
+    <thead>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>IsAdmin</th>
+    </thead>
     <tbody>
         @foreach (var user in Model)
         {
             <tr>
 
+                <td>@user.Id</td>
                 <td>@user.Username</td>
+                <td>@user.Password</td>
+                <td>@user.isAdmin</td>
                 <td>
                     <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@user.Id" asp-controller="Users" asp-route-Name="@user.Username">Edit</a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@user.Id" asp-controller="Users" asp-route-Name="@user.Username">Delete</a>

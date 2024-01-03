@@ -1,24 +1,35 @@
-﻿@{
-    ViewData["Title"] = "Calendar View";
-}
+﻿@model List<EventsViewModel>
 
-<!-- Include jQuery UI CSS -->
-<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
-
-<!-- Your HTML content -->
 <div>
-    <label for="datepicker">Select Date: </label>
-    <input type="text" id="datepicker" />
+    <h1>My Events</h1>
 </div>
 
-<!-- Include jQuery and jQuery UI scripts -->
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var myEvent in Model)
+        {
+            <tr>
+                <td>@myEvent.Id</td>
+                <td>@myEvent.Name</td>
+                <td>@myEvent.Date</td>
+                <td>
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    <script>
-        $(function () {
-            $("#datepicker").datepicker();
-        });
-    </script>
-}
+<div>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="Calendar">Add</a>
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Calendar")">Back</a>
+    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
+</div>
