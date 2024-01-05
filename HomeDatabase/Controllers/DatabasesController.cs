@@ -8,6 +8,7 @@ namespace HomeDatabase.Controllers
     public class DatabasesController : Controller
     {
 
+
         [Authorize]
         public IActionResult ListOfDatabases()
         {
@@ -35,13 +36,13 @@ namespace HomeDatabase.Controllers
 
         public IActionResult CreateDatabase(DatabasesModel database)
         {
-            if (SqlConnect.Instance.Insert($"Insert Into Test") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Create DATABASE {database.Name}") > 0)
             {
-                return View();
+                return Success();
             }
             else
             {
-                return NotFound();
+                return Error();
             }
         }
 
@@ -65,6 +66,16 @@ namespace HomeDatabase.Controllers
         }
 
 
+        public IActionResult Success()
+        {
+            return View();
+        }
+
+
+        public IActionResult Error()
+        {
+            return View();
+        }
 
     }
 }

@@ -1,7 +1,6 @@
 ﻿@model DatabasesModel
 
 <form method="post" asp-action="CreateDatabase">
-    <input asp-for="Name" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">
@@ -10,7 +9,9 @@
         </div>
         <div class="mb-3">
             <label asp-for="Name"></label>
-            <input asp-for="Name" enabled class="form-control" />
+            <input asp-for="Name" class="form-control" />
+            <!-- Add a hidden input to ensure the Name property is posted -->
+            <input type="hidden" asp-for="Name" />
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
         <a asp-controller="Databases" asp-action="ListOfDatabases" class="btn btn-secondary" style="width:150px">

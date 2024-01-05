@@ -57,13 +57,25 @@
             var checkbox1 = document.createElement('input');
             checkbox1.type = 'checkbox';
             option1.appendChild(checkbox1);
-            option1.appendChild(document.createTextNode('int'));
+            option1.appendChild(document.createTextNode('int(200)'));
 
             var option2 = document.createElement('option');
             var checkbox2 = document.createElement('input');
             checkbox2.type = 'checkbox';
             option2.appendChild(checkbox2);
-            option2.appendChild(document.createTextNode('varchar'));
+            option2.appendChild(document.createTextNode('varchar(200)'));
+
+            var option3 = document.createElement('option');
+            var checkbox3 = document.createElement('input');
+            checkbox3.type = 'checkbox';
+            option3.appendChild(checkbox3);
+            option3.appendChild(document.createTextNode('bit'));
+
+            var option4 = document.createElement('option');
+            var checkbox4 = document.createElement('input');
+            checkbox4.type = 'checkbox';
+            option4.appendChild(checkbox4);
+            option4.appendChild(document.createTextNode('date'));
 
             // third column
             var checkbox3 = document.createElement('input');
@@ -82,6 +94,8 @@
             // Append the options to the select element
             select.appendChild(option1);
             select.appendChild(option2);
+            select.appendChild(option3);
+            select.appendChild(option4);
 
             // Append the input and checkboxes to the cells
             cell1.appendChild(input1);

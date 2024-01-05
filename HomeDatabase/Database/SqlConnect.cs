@@ -231,6 +231,32 @@ namespace HomeDatabase.Database
             return set;
         }
 
+        public object ExecScalar(string sql)
+        {
+            if (!CheckConnection())
+            {
+                return null;
+            }
+            try
+            {
+                using (Locker.Lock(instances))
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandTimeout = queryTimeOut;
+                    cmd.Connection = connection;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql;
+                    object obj = cmd.ExecuteScalar();
+                    return obj;
+                }
+
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         //Get Databases
         public List<DatabasesModel> GetDatabaseList()
         {
@@ -320,6 +346,39 @@ namespace HomeDatabase.Database
 
         }
 
+        public int ExecuteNQ(string sql, List<SqlParameter> parameters = null)
+        {
+            if (!CheckConnection())
+            {
+                return 0;
+            }
+            try
+            {
+                using (Locker.Lock(instances))
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = connection;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql;
+                    int obj;
+                    if (parameters != null && parameters.Count > 0)
+                    {
+                        cmd.Parameters.AddRange(parameters.ToArray());
+                        obj = cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        obj = cmd.ExecuteNonQuery();
+                    }
+                    instances.Remove(currentInstanceId.Value);
+                    return obj;
+                }
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
         public void DisposeTable(DataTable table)
         {
@@ -360,8 +419,9 @@ namespace HomeDatabase.Database
         }
 
 
-        public void RestoreDB(string pathDB, string NameOfDatabase)
+        public bool RestoreDB(string pathDB, string NameOfDatabase)
         {
+            bool result = false;
             try
             {
                 using (connection = new SqlConnection(connectionString))
@@ -375,14 +435,21 @@ namespace HomeDatabase.Database
                     using (SqlCommand command = new SqlCommand(restoreDB, connection))
                     {
                         command.ExecuteNonQuery();
+                        result = true;
                     }
                     connection.Close();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
+                result = false;
             }
+            finally
+            {
+                CloseConnection();
+            }
+            return result;
         }
 
 
@@ -393,7 +460,7 @@ namespace HomeDatabase.Database
             {
                 string appRootPath = AppContext.BaseDirectory;
                 CheckConnection();
-                string query = $"BACKUP DATABASE {NameOfDatabase} TO DISK = '{appRootPath}' \\backupfile.bak' WITH FORMAT,MEDIANAME = 'Z_SQLServerBackups',NAME = 'Full Backup of Testdb';";
+                string query = $"BACKUP DATABASE {NameOfDatabase} TO DISK = '{appRootPath} \\backupfile.bak' WITH FORMAT,MEDIANAME = 'Z_SQLServerBackups',NAME = 'Full Backup of HomeDB';";
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.ExecuteNonQuery();
                 result = true;

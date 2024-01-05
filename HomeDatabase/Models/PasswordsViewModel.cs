@@ -13,5 +13,7 @@
         public string Password { get; set; }
 
         public string Service { get; set; }
+
+        public string encryptionKey { get; set; }
     }
 }

@@ -29,12 +29,16 @@
 
 
 
-<div>
+<div class="form-group">
     <a class="btn btn-primary" asp-action="Create" asp-controller="HomeDB">Create new Table</a>
+    <a class="btn btn-primary" id="submitBtn" asp-action="BackupDB" asp-controller="HomeDB"> Backup Database </a>
+    <form method="post" enctype="multipart/form-data" asp-controller="HomeDB" asp-action="RestoreDB">
+        <label for="backupFile">Upload Backup File:</label>
+        <input type="file" class="form-control-file" id="backupFile" name="backupFile">
+        <button type="submit" class="btn btn-primary">Restore Database</button>
+    </form>
     <a class="btn btn-primary" id="submitBtn" asp-action="CleanDB" asp-controller="HomeDB"> Clean Database </a>
-    <a class="btn btn-primary" id="submitBtn" asp-action="RestoreDB" asp-controller="HomeDB"> Restore Database </a>
-    <a class="btn btn-primary" id="submitBtn" asp-action="Backup" asp-controller="HomeDB"> Backup Database </a>
-    <a asp-controller="HomeDB" asp-action="Index" class="btn btn-secondary" style="width:150px">
+    <a asp-controller="Databases" asp-action="ListOfDatabases" class="btn btn-secondary" style="width:150px">
         Back
     </a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />

@@ -80,9 +80,43 @@ namespace HomeDatabase.Controllers
         }
 
 
-        public string RestoreDB()
+        [HttpPost]
+        public async Task<IActionResult> RestoreDB(IFormFile backupFile)
         {
-            return "success";
+            if (backupFile != null && backupFile.Length > 0)
+            {
+                try
+                {
+                    // Define a path to save the uploaded file temporarily
+                    var tempFilePath = Path.GetTempFileName();
+
+                    // Copy the uploaded file to the temporary path
+                    using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                    {
+                        await backupFile.CopyToAsync(stream);
+                    }
+
+                    // Use the tempFilePath in your SQLConnect to perform the restore
+                    if (SqlConnect.Instance.RestoreDB(tempFilePath, "HomeDB"))
+                    {
+                        // Perform operations after successful restore
+                        return RedirectToAction("Success", "HomeDB");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions or errors, log them, etc.
+                    return RedirectToAction("Error", "HomeDB");
+                }
+            }
+
+            // Handle cases where no file was uploaded or an error occurred
+            return RedirectToAction("Error", "HomeDB");
+        }
+
+        public IActionResult Success()
+        {
+            return View();
         }
 
 

@@ -25,8 +25,13 @@
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Password">  </label>
-            <input asp-for="Password" class="form-control" />
+            <label asp-for="Password">Password</label>
+            <div class="input-group">
+                <input id="passwordInput" asp-for="Password" class="form-control" type="password" />
+                <span class="input-group-text">
+                    <input id="showPassword" type="checkbox" onchange="togglePasswordVisibility()"> Show Password
+                </span>
+            </div>
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="mb-3">
@@ -42,3 +47,15 @@
 </form>
 
 
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("passwordInput");
+        var showPasswordCheckbox = document.getElementById("showPassword");
+
+        if (showPasswordCheckbox.checked) {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
+</script>

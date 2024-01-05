@@ -13,23 +13,30 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var myEvent in Model)
+        @if (Model != null)
         {
-            <tr>
-                <td>@myEvent.Id</td>
-                <td>@myEvent.Name</td>
-                <td>@myEvent.Date</td>
-                <td>
-                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Edit</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Delete</a>
-                </td>
-            </tr>
+            @foreach (var myEvent in Model)
+            {
+                <tr>
+                    <td>@myEvent.Id</td>
+                    <td>@myEvent.Name</td>
+                    <td>@myEvent.Date</td>
+                    <td>
+                        <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Edit</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Delete</a>
+                    </td>
+                </tr>
+            }
         }
+        
     </tbody>
 </table>
 
 <div>
     <a class="btn btn-primary" asp-action="Create" asp-controller="Calendar">Add</a>
-    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Calendar")">Back</a>
+    @*<a class="btn btn-secondary" href="@Url.Action("GoBack", "Calendar")">Back</a>*@
+    <a asp-controller="Home" asp-action="" class="btn btn-secondary" style="width:150px">
+        Back
+    </a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
 </div>

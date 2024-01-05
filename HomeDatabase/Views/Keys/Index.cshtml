@@ -24,7 +24,10 @@
                 <td>@key.FirstName</td>
                 <td>@key.LastName</td>
                 <td>@key.Username</td>
-                <td>@key.Password</td>
+                <td>
+                    <button onclick="copyPasswordWithCodeVerification(this)">Copy Password</button>
+                    <span class="password-field" data-password="@key.Password">********</span>
+                </td>
                 <td>@key.Service</td>
                 <td>
                     <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@key.Id" asp-controller="Keys" asp-route-Name="@key.FirstName">Edit</a>
@@ -37,6 +40,55 @@
 
 <div>
     <a class="btn btn-primary" asp-action="Create" asp-controller="Keys">Add</a>
-    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Keys")">Back</a>
+    <a asp-controller="Home" asp-action="" class="btn btn-secondary" style="width:150px">
+        Back
+    </a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
 </div>
+
+<script>
+    // Function to retrieve the code from settings (replace this with your actual logic)
+    function getCodeFromSettings() {
+        // Fetch the code from your database or settings
+        return "9963"; // Replace with your fetched code
+    }
+
+    // Function to show alert and prompt for code verification
+    function verifyCodeForAction(actionType) {
+        var enteredCode = prompt("Enter the code to perform " + actionType + ":");
+
+        var settingsCode = getCodeFromSettings();
+
+        if (enteredCode !== null && enteredCode === settingsCode) {
+            return true; // Code is correct
+        } else {
+            alert("Incorrect code! Action canceled.");
+            return false; // Code is incorrect or canceled
+        }
+    }
+
+    // Function to handle the copy password action with code verification
+    function copyPasswordWithCodeVerification(button) {
+        var isValidCode = verifyCodeForAction("password copy");
+
+        if (isValidCode) {
+            // Perform password copy action here
+            // Add your code to copy the password to the clipboard
+            // Example: (you might have a different implementation)
+            var passwordField = button.parentElement.querySelector('.password-field');
+            var passwordText = passwordField.dataset.password;
+
+            var tempInput = document.createElement('input');
+            tempInput.value = passwordText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            alert("Password copied to clipboard!");
+        }
+    }
+
+    
+
+</script>

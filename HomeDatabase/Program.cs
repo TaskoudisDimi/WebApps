@@ -14,7 +14,13 @@ namespace HomeDatabase
 {
     public class Program
     {
-        
+
+        //TODO: Google Calendar
+        //TODO: Passwords
+        //TODO: Database Backup, Restore, Delete, Clear, Add/Edit/Delete/Update Table, Add Database
+        //TODO: Database Trancate
+
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();

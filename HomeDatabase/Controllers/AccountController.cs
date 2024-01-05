@@ -42,7 +42,7 @@ namespace HomeDatabase.Controllers
                 };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
-                return RedirectToAction("ListOfDatabases", "Databases");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
