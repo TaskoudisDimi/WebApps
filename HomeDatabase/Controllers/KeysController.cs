@@ -154,9 +154,9 @@ namespace HomeDatabase.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(PasswordsViewModel server)
+        public IActionResult Delete(PasswordsViewModel key)
         {
-            if (SqlConnect.Instance.Delete($"Delete from Passwords where Id = {server.Id}") > 0)
+            if (SqlConnect.Instance.Delete($"Delete from Passwords where Id = {key.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }

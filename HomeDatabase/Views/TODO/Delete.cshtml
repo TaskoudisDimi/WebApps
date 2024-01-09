@@ -35,11 +35,11 @@
         </div>
         <div class="mb-3">
             <label asp-for="Done">  </label>
-            <input asp-for="Done" class="form-control" />
+            <input asp-for="Done" class="form-control" type="checkbox" />
             <span asp-validation-for="Done" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
-        <a asp-controller="Keys" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="TODO" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back To List
         </a>
     </div>
