@@ -1,0 +1,46 @@
+﻿@model List<TODOViewModel>
+
+<div>
+    <h1>TODO List</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>DateCreated</th>
+            <th>DeliveryDate</th>
+            <th>Done</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var key in Model)
+        {
+            <tr>
+                <td>@key.ID</td>
+                <td>@key.Name</td>
+                <td>@key.Title</td>
+                <td>@key.Description</td>
+                <td>@key.DateCreated</td>
+                <td>@key.DeliveryDate</td>
+                <td>@key.Done</td>
+                <td>
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@key.ID" asp-controller="Keys" asp-route-Name="@key.Name">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@key.ID" asp-controller="Keys" asp-route-Name="@key.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="TODO">Add</a>
+    <a asp-controller="Home" asp-action="" class="btn btn-secondary" style="width:150px">
+        Back
+    </a>
+    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
+</div>
+

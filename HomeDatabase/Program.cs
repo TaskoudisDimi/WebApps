@@ -16,7 +16,6 @@ namespace HomeDatabase
     {
 
         //TODO: Google Calendar
-        //TODO: Passwords
         //TODO: Database Backup, Restore, Delete, Clear, Add/Edit/Delete/Update Table, Add Database
         //TODO: Database Trancate
 

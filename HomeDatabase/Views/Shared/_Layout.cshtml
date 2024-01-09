@@ -28,6 +28,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Databases" asp-action="ListOfDatabases">Databases</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Calendar" asp-action="Index">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Keys" asp-action="Index">Passwords</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="TODO" asp-action="Index">TODO</a>
+                        </li>
                     </ul>
                     <ul class="nav-item navbar-right">
                         @if (User.Identity.IsAuthenticated)
