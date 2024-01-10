@@ -2,11 +2,13 @@
 using HomeDatabase.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Globalization;
 
 namespace HomeDatabase.Controllers
 {
     public class TODOController : Controller
     {
+
         public IActionResult Index()
         {
             DataTable servers = SqlConnect.Instance.SelectDataTable("SELECT ID, Name, Title, Description, DateCreated, DeliveryDate, Done FROM TODO");
@@ -38,8 +40,11 @@ namespace HomeDatabase.Controllers
         public IActionResult Create(TODOViewModel todo)
         {
 
+            string dateCreated = todo.DateCreated.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            string deliveryDate = todo.DeliveryDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
             if (SqlConnect.Instance.Insert($"Insert Into TODO Values ('{todo.Name}', '{todo.Title}'" +
-                $", '{todo.Description}', '{todo.DateCreated}', '{todo.DeliveryDate}', '{todo.Done}')") > 0)
+                $", '{todo.Description}', '{dateCreated}', '{deliveryDate}', '{todo.Done}')") > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -78,9 +83,13 @@ namespace HomeDatabase.Controllers
         public IActionResult Edit(TODOViewModel todo)
         {
 
+            string dateCreated = todo.DateCreated.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            string deliveryDate = todo.DeliveryDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+
             if (SqlConnect.Instance.Update($"Update TODO set Name = '{todo.Name}', " +
                 $"Description = '{todo.Description}', Title = '{todo.Title}', " +
-                $"DateCreated = '{todo.DateCreated}', DeliveryDate = '{todo.DeliveryDate}', Done = '{todo.Done}' where ID = {todo.ID}") > 0)
+                $"DateCreated = '{dateCreated}', DeliveryDate = '{deliveryDate}', Done = '{todo.Done}' where ID = {todo.ID}") > 0)
             {
                 return RedirectToAction("Index");
             }

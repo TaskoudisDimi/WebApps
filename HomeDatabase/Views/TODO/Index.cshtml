@@ -17,19 +17,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var key in Model)
+        @foreach (var todo in Model)
         {
             <tr>
-                <td>@key.ID</td>
-                <td>@key.Name</td>
-                <td>@key.Title</td>
-                <td>@key.Description</td>
-                <td>@key.DateCreated</td>
-                <td>@key.DeliveryDate</td>
-                <td>@key.Done</td>
+                <td>@todo.ID</td>
+                <td>@todo.Name</td>
+                <td>@todo.Title</td>
+                <td>@todo.Description</td>
+                <td>@todo.DateCreated</td>
+                <td>@todo.DeliveryDate</td>
+                <td>@todo.Done</td>
                 <td>
-                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@key.ID" asp-controller="Keys" asp-route-Name="@key.Name">Edit</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@key.ID" asp-controller="Keys" asp-route-Name="@key.Name">Delete</a>
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@todo.ID" asp-controller="TODO" asp-route-Name="@todo.Name">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@todo.ID" asp-controller="TODO" asp-route-Name="@todo.Name">Delete</a>
                 </td>
             </tr>
         }

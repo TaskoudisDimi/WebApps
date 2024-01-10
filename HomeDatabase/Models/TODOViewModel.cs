@@ -1,4 +1,6 @@
-﻿namespace HomeDatabase.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HomeDatabase.Models
 {
     public class TODOViewModel
     {
