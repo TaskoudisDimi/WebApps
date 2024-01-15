@@ -43,5 +43,23 @@
             <a href="@Url.Action("GoBack", "Account")" class="btn btn-primary">Back</a>
             <a href="@Url.Action("Register", "Account")" class="btn btn-primary">Register</a>
         </div>
+
+        <div>
+            <p>Or log in with:</p>
+            <ul>
+                @foreach (var provider in Model.ExternalLogins)
+                {
+                    <li>
+                        <a asp-controller="Account" asp-action="ExternalLogin" asp-route-provider="@provider.Name" title="Log in with @provider.DisplayName">
+                            @provider.DisplayName
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
     </form>
 </div>
+
+
+
+

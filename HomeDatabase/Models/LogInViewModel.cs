@@ -1,4 +1,6 @@
-﻿namespace HomeDatabase.Models
+﻿using Microsoft.AspNetCore.Authentication;
+
+namespace HomeDatabase.Models
 {
     public class LogInViewModel
     {
@@ -8,6 +10,10 @@
         public string ConfirmPassword { get; set; }
 
         public string Email { get; set; }
+
+        public string ReturnUrl { get; set; }
+
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     }
 }

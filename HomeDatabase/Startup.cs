@@ -29,7 +29,14 @@ namespace HomeDatabase
             services.AddControllersWithViews();
             services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddGoogle(options =>
+            {
+                options.ClientId = "538416839180-djsm3hq4l52uhsep9a304ac1ui3njq4i.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+                options.CallbackPath = "/signin-google";
+            })
+            .AddCookie(options =>
             {
                 options.Cookie.Name = "HomeDatabase.AuthCookie";
                 options.LoginPath = "/Account/LogIn";
@@ -43,7 +50,8 @@ namespace HomeDatabase
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-            });
+            }); 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

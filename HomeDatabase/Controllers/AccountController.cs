@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System.Text;
 using System;
+using Microsoft.AspNetCore.Authentication;
+
 
 namespace HomeDatabase.Controllers
 {
@@ -25,9 +27,56 @@ namespace HomeDatabase.Controllers
         }
 
         [HttpGet]
-        public IActionResult LogIn()
+        public async Task<IActionResult> LogIn()
         {
-            return View();
+            var schemes = await HttpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>().GetAllSchemesAsync();
+
+            var model = new LogInViewModel
+            {
+                ExternalLogins = schemes.Where(x => !string.IsNullOrEmpty(x.DisplayName)).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ExternalLogin(string provider)
+        {
+            // Request a redirect to the external login provider
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account");
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (result?.Succeeded != true)
+            {
+                // Handle the error, redirect, or display an error view
+                return RedirectToAction("LogIn");
+            }
+
+            // External login successful, retrieve user information
+            var externalClaims = result.Principal?.Claims;
+            var claims = new List<Claim>();
+
+            if (externalClaims != null)
+            {
+                claims.AddRange(externalClaims);
+            }
+
+            // Add additional claims or process the external user information as needed
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -48,6 +97,8 @@ namespace HomeDatabase.Controllers
             {
                 return View("LogIn");
             }
+
+            
         }
         
         [HttpGet]
