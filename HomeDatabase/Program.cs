@@ -14,7 +14,7 @@ namespace HomeDatabase
 {
     public class Program
     {
-
+        //TODO: Error message on Login/Register form
         //TODO: Google Calendar
         //TODO: Database Backup, Restore, Delete, Clear, Add/Edit/Delete/Update Table, Add Database
         //TODO: Database Trancate

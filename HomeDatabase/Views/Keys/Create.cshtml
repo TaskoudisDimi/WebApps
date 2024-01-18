@@ -28,9 +28,6 @@
             <label asp-for="Password">Password</label>
             <div class="input-group">
                 <input id="passwordInput" asp-for="Password" class="form-control" type="password" />
-                <span class="input-group-text">
-                    <input id="showPassword" type="checkbox" onchange="togglePasswordVisibility()"> Show Password
-                </span>
             </div>
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
