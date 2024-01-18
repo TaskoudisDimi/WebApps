@@ -8,6 +8,8 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using HomeDatabase.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using HomeDatabase.Helpers;
 
 namespace HomeDatabase
 {
@@ -43,7 +45,9 @@ namespace HomeDatabase
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
             services.AddAuthorization();
-
+            services.AddScoped<Authentication_Service>();
+            services.AddScoped<GenerateToken>();
+            services.AddScoped<EmailService>();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -85,9 +89,6 @@ namespace HomeDatabase
                     pattern: "{controller=Home}/{action=Index}");
             });
         }
-
-
-
 
     }
 }

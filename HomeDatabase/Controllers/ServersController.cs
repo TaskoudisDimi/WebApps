@@ -35,7 +35,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Create(ServersViewModel servers)
         {
-            if (SqlConnect.Instance.Insert($"Insert Into Servers Values ('{servers.Name}')") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Insert Into Servers Values ('{servers.Name}')") > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -69,7 +69,7 @@ namespace HomeDatabase.Controllers
         public IActionResult Edit(ServersViewModel server)
         {
 
-            if(SqlConnect.Instance.Update($"Update Servers set Name = '{server.Name}' where Id = {server.Id}") > 0)
+            if(SqlConnect.Instance.ExecuteNQ($"Update Servers set Name = '{server.Name}' where Id = {server.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -103,7 +103,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Delete(ServersViewModel server)
         {
-            if(SqlConnect.Instance.Delete($"Delete from Servers where Id = {server.Id}") > 0)
+            if(SqlConnect.Instance.ExecuteNQ($"Delete from Servers where Id = {server.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }

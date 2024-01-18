@@ -55,7 +55,7 @@ namespace HomeDatabase.Controllers
         
         public IActionResult DeleteTable(string TableName)
         {
-            if (SqlConnect.Instance.Delete($"Drop Table {TableName}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Drop Table {TableName}") > 0)
             {
                 return RedirectToAction("Index");
             }

@@ -43,7 +43,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Create(PasswordsViewModel key)
         {
-            if (SqlConnect.Instance.Insert($"Insert Into Passwords Values ('{key.FirstName}', '{key.LastName}'" +
+            if (SqlConnect.Instance.ExecuteNQ($"Insert Into Passwords Values ('{key.FirstName}', '{key.LastName}'" +
                 $", '{key.Username}', '{key.Password}', '{key.Service}')") > 0)
             {
                 return RedirectToAction("Index");
@@ -82,7 +82,7 @@ namespace HomeDatabase.Controllers
         public IActionResult Edit(PasswordsViewModel key)
         {
 
-            if (SqlConnect.Instance.Update($"Update Passwords set FirstName = '{key.FirstName}', " +
+            if (SqlConnect.Instance.ExecuteNQ($"Update Passwords set FirstName = '{key.FirstName}', " +
                 $"LastName = '{key.LastName}', Username = '{key.Username}', " +
                 $"Password = '{key.Password}', Service = '{key.Service}' where ID = {key.Id}") > 0)
             {
@@ -120,7 +120,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Delete(PasswordsViewModel server)
         {
-            if (SqlConnect.Instance.Delete($"Delete from Passwords where Id = {server.Id}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Delete from Passwords where Id = {server.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }

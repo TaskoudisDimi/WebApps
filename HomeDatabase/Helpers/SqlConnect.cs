@@ -142,59 +142,6 @@ namespace HomeDatabase.Database
             return reader;
         }
 
-        public int Insert(string cmd)
-        {
-            if (!CheckConnection())
-            {
-                return -1;
-            }
-            try
-            {
-                SqlCommand command = new SqlCommand(cmd, connection);
-                return command.ExecuteNonQuery();
-            }
-            catch
-            {
-                return -1;
-            }
-
-        }
-
-        public int Update(string cmd)
-        {
-            if (!CheckConnection())
-            {
-                return -1;
-            }
-            try
-            {
-                SqlCommand command = new SqlCommand(cmd, connection);
-                return command.ExecuteNonQuery();
-
-            }
-            catch
-            {
-                return -1;
-            }
-        }
-
-        public int Delete(string cmd)
-        {
-            if (!CheckConnection())
-            {
-                return -1;
-            }
-            try
-            {
-                SqlCommand command = new SqlCommand(cmd, connection);
-                return command.ExecuteNonQuery();
-
-            }
-            catch
-            {
-                return -1;
-            }
-        }
 
         public DataTable SelectDataTable(string sql, List<SqlParameter> parameters = null)
         {

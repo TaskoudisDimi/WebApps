@@ -14,30 +14,64 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System.Text;
 using System;
 using Microsoft.AspNetCore.Authentication;
-
+using Microsoft.Extensions.Options;
+using HomeDatabase.Helpers;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace HomeDatabase.Controllers
 {
     public class AccountController : Controller
     {
 
-        public IActionResult AccountView()
+        public readonly Authentication_Service authService;
+
+        public AccountController(Authentication_Service authService)
         {
-            return View();
+            this.authService = authService;
         }
+
+        #region Login
+        
 
         [HttpGet]
         public async Task<IActionResult> LogIn()
         {
             var schemes = await HttpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>().GetAllSchemesAsync();
-
-            var model = new LogInViewModel
+            var model = new UsersViewModel
             {
                 ExternalLogins = schemes.Where(x => !string.IsNullOrEmpty(x.DisplayName)).ToList()
             };
-
             return View(model);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> LogIn(UsersViewModel user)
+        {
+
+            var user_ = authService.ValidateUser(user);
+            if(user_ != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Username)
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                // Handle login failure
+                ModelState.AddModelError("LoginError", "Invalid username or password.");
+                return RedirectToAction("Error", "Account", new { loginError = "Invalid username or password." });
+            }
+        }
+
 
         [HttpGet]
         public IActionResult ExternalLogin(string provider)
@@ -45,7 +79,6 @@ namespace HomeDatabase.Controllers
             // Request a redirect to the external login provider
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account");
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-
             return Challenge(properties, provider);
         }
 
@@ -53,7 +86,6 @@ namespace HomeDatabase.Controllers
         public async Task<IActionResult> ExternalLoginCallback()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
             if (result?.Succeeded != true)
             {
                 // Handle the error, redirect, or display an error view
@@ -79,71 +111,31 @@ namespace HomeDatabase.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LogIn(LogInViewModel login)
-        {
-            DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From Users where Username = '{login.Username}' And Password = '{login.Password}'");
-            if (table.Rows.Count > 0)
-            {
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.Name, login.Username)
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                return View("LogIn");
-            }
 
-            
-        }
-        
+        #endregion
+
+
+        #region Register
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(LogInViewModel model)
+
+        [HttpPost("RegisterUser")]
+        public IActionResult RegisterUser(UsersViewModel model)
         {
-            // Generate a verification token (e.g., a GUID)
-            // Generate Token
-            string verificationToken = Guid.NewGuid().ToString();
-
-            // Save the verification token and user details to the database
-            //Check if the user is in the database
-            DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From Users where Username = '{model.Username}' And Password = '{model.Password}'");
-            if (table.Rows.Count > 0)
+            string token = authService.RegisterAccount(model);
+            if (token == null)
             {
-                return View("LogIn");
+                // Handle registration failure
+                // Handle login failure
+                ModelState.AddModelError("RegistrationError", "Registration failed.");
+                return RedirectToAction("Error", "Account", new { registrationError = "Registration failed." });
             }
-            else
-            {
-                // Send verification email
-                string callbackUrl = Url.Action("VerifyAccount", "Account", new { token = verificationToken }, protocol: HttpContext.Request.Scheme);
-
-                MailMessage message = new MailMessage();
-                message.From = new MailAddress(model.Email);
-                message.To.Add(new MailAddress(model.Email));
-                message.Subject = "Account Verification";
-                message.Body = $"Dear {model.Username},<br/><br/>Please click the link below to verify your account:<br/><br/><a href=\"{callbackUrl}\">{callbackUrl}</a>";
-                message.IsBodyHtml = true;
-
-                using (SmtpClient smtpClient = new SmtpClient("smtp-relay.sendinblue.com", 587))
-                {
-                    smtpClient.Credentials = new NetworkCredential("taskoudisdimitris@gmail.com", "NZ0cqP31rFRT9gJL");
-                    smtpClient.EnableSsl = true;
-                    await smtpClient.SendMailAsync(message);
-                }
-
-                return RedirectToAction("EmailConfirmed");
-            }
-
-                
+            return RedirectToAction("EmailConfirmed", "Account");
         }
 
         public IActionResult EmailConfirmed()
@@ -151,22 +143,26 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
-
-        // Action method to handle account verification
-        public IActionResult VerifyAccount(string token)
+        [HttpGet("VerifyEmail")]
+        public IActionResult VerifyEmail([FromQuery] string token)
         {
-            LogInViewModel user = new LogInViewModel();
-            DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From Users where Token = '{token}'");
-            if (table.Rows.Count > 0)
+            bool isEmailVerified = authService.VerifyEmail(token);
+            if (isEmailVerified)
             {
-                return RedirectToAction("ListOfDatabases", "Databases");
+                return RedirectToAction("Register", "Account");
             }
-            else
-            {
-                return View("Register");
-            }
+            ModelState.AddModelError("RegistrationError", "Email verification failed.");
+            return RedirectToAction("Error", "Account", new { registrationError = "Email verification failed" });
         }
 
+        #endregion
+
+        public IActionResult Error(string loginError)
+        {
+            // Optionally, you can do something with the loginError parameter
+            ViewData["Error"] = Error;
+            return View();
+        }
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -175,12 +171,12 @@ namespace HomeDatabase.Controllers
 
         public IActionResult GoBack()
         {
-            string previousUrl = HttpContext.Session.GetString("PreviousUrl");
-            if (previousUrl != null)
-            {
-                return Redirect(previousUrl);
-            }
-            return RedirectToAction("Index", "Account");
+            //string previousUrl = HttpContext.Session.GetString("PreviousUrl");
+            //if (previousUrl != null)
+            //{
+            //    return Redirect(previousUrl);
+            //}
+            return RedirectToAction("Index", "Home");
         }
 
     }

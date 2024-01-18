@@ -54,7 +54,7 @@ namespace HomeDatabase.Controllers
 
         public IActionResult DeleteDatabase(DatabasesModel Database)
         {
-            if (SqlConnect.Instance.Delete($"Drop Database where database_id {Database.id}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Drop Database where database_id {Database.id}") > 0)
             {
                 return RedirectToAction("Index");
             }

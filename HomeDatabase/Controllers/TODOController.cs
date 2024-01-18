@@ -43,7 +43,7 @@ namespace HomeDatabase.Controllers
             string dateCreated = todo.DateCreated.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             string deliveryDate = todo.DeliveryDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
-            if (SqlConnect.Instance.Insert($"Insert Into TODO Values ('{todo.Name}', '{todo.Title}'" +
+            if (SqlConnect.Instance.ExecuteNQ($"Insert Into TODO Values ('{todo.Name}', '{todo.Title}'" +
                 $", '{todo.Description}', '{dateCreated}', '{deliveryDate}', '{todo.Done}')") > 0)
             {
                 return RedirectToAction("Index");
@@ -87,7 +87,7 @@ namespace HomeDatabase.Controllers
             string deliveryDate = todo.DeliveryDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
 
-            if (SqlConnect.Instance.Update($"Update TODO set Name = '{todo.Name}', " +
+            if (SqlConnect.Instance.ExecuteNQ($"Update TODO set Name = '{todo.Name}', " +
                 $"Description = '{todo.Description}', Title = '{todo.Title}', " +
                 $"DateCreated = '{dateCreated}', DeliveryDate = '{deliveryDate}', Done = '{todo.Done}' where ID = {todo.ID}") > 0)
             {
@@ -128,7 +128,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Delete(TODOViewModel todo)
         {
-            if (SqlConnect.Instance.Delete($"Delete from TODO where ID = {todo.ID}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Delete from TODO where ID = {todo.ID}") > 0)
             {
                 return RedirectToAction("Index");
             }

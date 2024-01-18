@@ -1,4 +1,4 @@
-﻿@model LogInViewModel
+﻿@model UsersViewModel
 
 
 <style>
@@ -26,7 +26,7 @@
 </style>
 
 <div class="centered-container">
-    <form asp-action="Register" method="post">
+    <form asp-action="RegisterUser" asp-controller="Account" method="post">
         <div class="form-group">
             <label asp-for="Username">
                 Username:

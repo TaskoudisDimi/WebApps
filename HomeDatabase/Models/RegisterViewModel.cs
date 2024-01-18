@@ -2,8 +2,9 @@
 
 namespace HomeDatabase.Models
 {
-    public class LogInViewModel
+    public class RegisterViewModel
     {
+
         public string Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -14,6 +15,7 @@ namespace HomeDatabase.Models
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
 
     }
 }

@@ -35,7 +35,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Create(UsersViewModel user)
         {
-            if (SqlConnect.Instance.Insert($"Insert Into Users Values ('{user.Username}')") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Insert Into Users Values ('{user.Username}')") > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -72,7 +72,7 @@ namespace HomeDatabase.Controllers
         public IActionResult Edit(UsersViewModel user)
         {
 
-            if (SqlConnect.Instance.Update($"Update Users set Name = '{user.Username}' where Id = {user.Id}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Update Users set Name = '{user.Username}' where Id = {user.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -106,7 +106,7 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Delete(UsersViewModel user)
         {
-            if (SqlConnect.Instance.Delete($"Delete from Users where Id = {user.Id}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Delete from Users where Id = {user.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }

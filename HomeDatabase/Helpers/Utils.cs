@@ -12,6 +12,10 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Security.Cryptography;
 using System.Drawing;
+using HomeDatabase.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace HomeDatabase.Database
 {
@@ -136,7 +140,6 @@ namespace HomeDatabase.Database
                 return defval;
             }
         }
-
 
         public static int? GetNullInt(object val, int? defval = null)
         {
@@ -445,7 +448,6 @@ namespace HomeDatabase.Database
             return result;
         }
 
-
         public static void OpenFileFromUrl(string url)
         {
             try
@@ -706,9 +708,11 @@ namespace HomeDatabase.Database
             using Aes aes = Aes.Create();
             aes.KeySize = keySize;
             aes.GenerateKey();
-
             return Convert.ToBase64String(aes.Key);
         }
+
+
+        
 
     }
 
