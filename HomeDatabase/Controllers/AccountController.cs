@@ -30,9 +30,9 @@ namespace HomeDatabase.Controllers
             this.authService = authService;
         }
 
+
         #region Login
         
-
         [HttpGet]
         public async Task<IActionResult> LogIn()
         {
@@ -149,7 +149,7 @@ namespace HomeDatabase.Controllers
             bool isEmailVerified = authService.VerifyEmail(token);
             if (isEmailVerified)
             {
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("Login", "Account");
             }
             ModelState.AddModelError("RegistrationError", "Email verification failed.");
             return RedirectToAction("Error", "Account", new { registrationError = "Email verification failed" });
@@ -163,6 +163,7 @@ namespace HomeDatabase.Controllers
             ViewData["Error"] = Error;
             return View();
         }
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

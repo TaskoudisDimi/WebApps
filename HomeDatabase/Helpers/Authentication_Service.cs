@@ -21,7 +21,8 @@ namespace HomeDatabase.Helpers
 
         public string RegisterAccount(UsersViewModel model)
         {
-
+            if (model.ConfirmPassword != model.Password)
+                return null;
             // Hash the password before saving to the database
             string passwordHash = Utils.HashPassword(model.Password);
             // Create a new user
@@ -75,8 +76,8 @@ namespace HomeDatabase.Helpers
                 user.PendingRegistration = false;
                 user.Token = null;
 
-                SqlConnect.Instance.ExecuteNQ("Update Users set Token = null, PendingRegistration = false" +
-                    $"where Token = {emailVerificationToken}");
+                SqlConnect.Instance.ExecuteNQ("Update Users set Token = null, PendingRegistration = 'false'" +
+                    $"where Token = '{emailVerificationToken}'");
 
                 // Update the user details (in-memory or using a caching mechanism)
                 // userRepo.UpdateUser(user);
@@ -107,6 +108,7 @@ namespace HomeDatabase.Helpers
         }
 
         private UsersViewModel user = new UsersViewModel();
+
         public UsersViewModel GetUserByEmailVerificationToken(string emailVerificationToken)
         {
             // This could be in-memory storage or using a caching mechanism

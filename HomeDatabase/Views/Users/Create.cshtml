@@ -9,14 +9,29 @@
             <hr />
         </div>
         <div class="mb-3">
-            <label asp-for="Id"></label>
-            <input asp-for="Id" class="form-control" />
-            <span asp-validation-for="Id" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
             <label asp-for="Username">  </label>
             <input asp-for="Username" class="form-control" />
             <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+         <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="isAdmin"></label>
+            <input asp-for="isAdmin" type="checkbox"/>
+            <span asp-validation-for="isAdmin" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PendingRegistration"></label>
+            <input asp-for="PendingRegistration" type="checkbox" />
+            <span asp-validation-for="PendingRegistration" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
         <a asp-controller="Users" asp-action="Index" class="btn btn-secondary" style="width:150px">

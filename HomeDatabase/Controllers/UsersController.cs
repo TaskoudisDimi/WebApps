@@ -2,6 +2,7 @@
 using HomeDatabase.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Reflection;
 
 namespace HomeDatabase.Controllers
 {
@@ -19,7 +20,9 @@ namespace HomeDatabase.Controllers
                                     Id = Convert.ToInt32(row["Id"]),
                                     Username = row["Username"].ToString(),
                                     Password = row["Password"].ToString(),
-                                    isAdmin = Convert.ToBoolean(row["isAdmin"])
+                                    Email = row["Email"].ToString(),
+                                    isAdmin = Convert.ToBoolean(row["isAdmin"]),
+                                    PendingRegistration = Convert.ToBoolean(row["PendingRegistration"])
                                 })
                                 .ToList();
 
@@ -35,8 +38,13 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Create(UsersViewModel user)
         {
-            if (SqlConnect.Instance.ExecuteNQ($"Insert Into Users Values ('{user.Username}')") > 0)
+            // Hash the password before saving to the database
+            string passwordHash = Utils.HashPassword(user.Password);
+            DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From Users where Username = '{user.Username}'");
+            if (!(table.Rows.Count > 0))
             {
+                SqlConnect.Instance.ExecuteNQ($"Insert Into Users Values ('{user.Username}', '{passwordHash}'" +
+                $", '{user.Email}', '{user.Token}','{user.isAdmin}','{user.PendingRegistration}', '{user.resetPassword}')");
                 return RedirectToAction("Index");
             }
             else
@@ -57,8 +65,9 @@ namespace HomeDatabase.Controllers
                     user.Id = Convert.ToInt32(row["Id"]);
                     user.Username = row["Username"].ToString();
                     user.Password = row["Password"].ToString();
+                    user.Email = row["Email"].ToString();
                     user.isAdmin = (bool)row["isAdmin"];
-
+                    user.PendingRegistration = (bool)row["PendingRegistration"];
                 }
                 return View(user);
             }
@@ -72,7 +81,9 @@ namespace HomeDatabase.Controllers
         public IActionResult Edit(UsersViewModel user)
         {
 
-            if (SqlConnect.Instance.ExecuteNQ($"Update Users set Name = '{user.Username}' where Id = {user.Id}") > 0)
+            if (SqlConnect.Instance.ExecuteNQ($"Update Users set Username = '{user.Username}', Password = '{user.Username}'" +
+                $", Email = '{user.Email}', isAdmin = '{user.isAdmin}', PendingRegistration = '{user.PendingRegistration}'" +
+                $" where Id = {user.Id}") > 0)
             {
                 return RedirectToAction("Index");
             }

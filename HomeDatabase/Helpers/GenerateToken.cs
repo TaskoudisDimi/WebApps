@@ -9,7 +9,7 @@ namespace HomeDatabase.Helpers
     {
         //TODO: Get this from DB
         private readonly string secretKey = "306ba247b1063ab211ac4a53d1793727"; 
-        private readonly int tokenExpirationMinutes = 60; 
+        private readonly int tokenExpirationMinutes = 1; 
 
        public string Generate_Token(UsersViewModel user)
         {

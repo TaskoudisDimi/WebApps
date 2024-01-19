@@ -8,20 +8,25 @@
 
 <table class="table">
     <thead>
-        <th>ID</th>
+        <th>Id</th>
         <th>Username</th>
         <th>Password</th>
+        <th>Email</th>
         <th>IsAdmin</th>
+        <th>PendingRegistration</th>
     </thead>
     <tbody>
         @foreach (var user in Model)
         {
             <tr>
-
                 <td>@user.Id</td>
                 <td>@user.Username</td>
-                <td>@user.Password</td>
+                <td>
+                    <span class="password-field" data-password="@user.Password">********</span>
+                </td>
+                <td>@user.Email</td>
                 <td>@user.isAdmin</td>
+                <td>@user.PendingRegistration</td>
                 <td>
                     <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@user.Id" asp-controller="Users" asp-route-Name="@user.Username">Edit</a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@user.Id" asp-controller="Users" asp-route-Name="@user.Username">Delete</a>
