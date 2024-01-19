@@ -42,12 +42,12 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <a>Welcome, <span>@User.FindFirstValue(ClaimTypes.Name)</span>!</a>
-                            <a href="/Account/Logout">Logout</a> 
+                            <a asp-action="Logout" asp-controller="Account">Logout</a>
                         }
                         else
                         {
-                            <a href="/Account/Login">Login</a> 
-                            <a href="/Account/Register">Register</a> 
+                            <a asp-action="Login" asp-controller="Account">Login</a>
+                            <a asp-action="Register" asp-controller="Account">Register</a>
                         }
                     </ul>
 

@@ -44,14 +44,17 @@ namespace HomeDatabase
                 options.LoginPath = "/Account/LogIn";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+            });
             services.AddScoped<Authentication_Service>();
             services.AddScoped<GenerateToken>();
             services.AddScoped<EmailService>();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             }); 

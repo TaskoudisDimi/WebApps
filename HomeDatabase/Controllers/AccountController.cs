@@ -30,7 +30,6 @@ namespace HomeDatabase.Controllers
             this.authService = authService;
         }
 
-
         #region Login
         
         [HttpGet]
@@ -48,20 +47,26 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> LogIn(UsersViewModel user)
         {
-
             var user_ = authService.ValidateUser(user);
             if(user_ != null)
             {
+                bool isAdmin = user_.isAdmin == true ? true : false;
+                var roles = isAdmin ? new[] { "Admin" } : new[] { "User" };
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Username)
                 };
-
+                // Add role claims
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
-
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
+                // Assign roles to the user
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddHours(1) // Set the expiration time as needed
+                });
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -164,6 +169,7 @@ namespace HomeDatabase.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -179,6 +185,14 @@ namespace HomeDatabase.Controllers
             //}
             return RedirectToAction("Index", "Home");
         }
+
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
 
     }
 

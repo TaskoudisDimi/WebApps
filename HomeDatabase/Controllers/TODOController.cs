@@ -1,11 +1,13 @@
 ﻿using HomeDatabase.Database;
 using HomeDatabase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Globalization;
 
 namespace HomeDatabase.Controllers
 {
+    [Authorize]
     public class TODOController : Controller
     {
 

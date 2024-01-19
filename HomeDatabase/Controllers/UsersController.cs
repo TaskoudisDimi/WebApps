@@ -1,13 +1,16 @@
 ﻿using HomeDatabase.Database;
 using HomeDatabase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Reflection;
 
 namespace HomeDatabase.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
+
         public IActionResult Index()
         {
 
@@ -25,10 +28,8 @@ namespace HomeDatabase.Controllers
                                     PendingRegistration = Convert.ToBoolean(row["PendingRegistration"])
                                 })
                                 .ToList();
-
             return View(list);
         }
-
 
         public IActionResult Create()
         {
@@ -129,8 +130,9 @@ namespace HomeDatabase.Controllers
 
         public IActionResult GoBack()
         {
-
             return RedirectToAction("Index", "Databases");
         }
+
+
     }
 }
