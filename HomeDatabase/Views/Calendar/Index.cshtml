@@ -1,10 +1,41 @@
 ﻿@model List<EventsViewModel>
 
+
+<!-- FullCalendar CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.css" />
+
+<!-- FullCalendar JavaScript dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+
+<!-- FullCalendar JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.js"></script>
+
 <div>
     <h1>My Events</h1>
+    <div id="calendar"></div>
 </div>
 
-<table class="table">
+<script>
+    $(document).ready(function () {
+        // Initialize FullCalendar
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: @Html.Raw(Json.Serialize(Model)),
+            eventClick: function (event) {
+                // Handle event click if needed
+                alert('Event clicked: ' + event.title);
+            }
+        });
+    });
+</script>
+
+
+@*<table class="table">
     <thead>
         <tr>
             <th>ID</th>
@@ -30,13 +61,13 @@
         }
         
     </tbody>
-</table>
+</table>*@
 
-<div>
+@*<div>
     <a class="btn btn-primary" asp-action="Create" asp-controller="Calendar">Add</a>
-    @*<a class="btn btn-secondary" href="@Url.Action("GoBack", "Calendar")">Back</a>*@
+    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Calendar")">Back</a>
     <a asp-controller="Home" asp-action="" class="btn btn-secondary" style="width:150px">
         Back
     </a>
     <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
-</div>
+</div>*@

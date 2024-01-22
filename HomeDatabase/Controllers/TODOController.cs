@@ -1,4 +1,5 @@
 ﻿using HomeDatabase.Database;
+using HomeDatabase.Helpers;
 using HomeDatabase.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,15 @@ namespace HomeDatabase.Controllers
     [Authorize]
     public class TODOController : Controller
     {
+
+        private readonly NotificationService _notificationService;
+        private static readonly Dictionary<string, string> UserDeviceTokens = new Dictionary<string, string>();
+
+        public TODOController(NotificationService notifiService)
+        {
+            _notificationService = notifiService;
+        }
+
 
         public IActionResult Index()
         {
@@ -48,6 +58,16 @@ namespace HomeDatabase.Controllers
             if (SqlConnect.Instance.ExecuteNQ($"Insert Into TODO Values ('{todo.Name}', '{todo.Title}'" +
                 $", '{todo.Description}', '{dateCreated}', '{deliveryDate}', '{todo.Done}')") > 0)
             {
+
+
+                string deviceToken = GetUserDeviceToken(todo.Name); // Implement this method to get the device token
+
+                if (!string.IsNullOrEmpty(deviceToken))
+                {
+                    _notificationService.SendNotificationAsync(deviceToken, "Delivery Reminder", $"Your TODO with ID {todo.ID} is approaching.");
+                }
+
+
                 return RedirectToAction("Index");
             }
             else
@@ -55,6 +75,18 @@ namespace HomeDatabase.Controllers
                 return NotFound();
             }
 
+        }
+
+        //Android
+        private string GetUserDeviceToken(string userName)
+        {
+            // Retrieve the device token for the user from the dictionary
+            if (UserDeviceTokens.TryGetValue(userName, out var deviceToken))
+            {
+                return deviceToken;
+            }
+
+            return null;
         }
 
         public IActionResult Edit(int? id)
@@ -102,7 +134,6 @@ namespace HomeDatabase.Controllers
         }
 
 
-
         public IActionResult Delete(int? id)
         {
             DataTable table = SqlConnect.Instance.SelectDataTable($"Select * From TODO where ID = '{id}'");
@@ -144,8 +175,6 @@ namespace HomeDatabase.Controllers
         {
             return RedirectToAction("Index", "Keys");
         }
-
-
 
 
     }

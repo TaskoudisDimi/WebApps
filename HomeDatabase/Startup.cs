@@ -30,7 +30,7 @@ namespace HomeDatabase
             
             services.AddControllersWithViews();
             services.AddSingleton<IConfiguration>(Configuration);
-
+            services.AddSingleton<NotificationService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddGoogle(options =>
             {

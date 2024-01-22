@@ -14,12 +14,14 @@ namespace HomeDatabase
 {
     public class Program
     {
+        //TODO: Build Push Notification mechanisms
+        //TODO: CRUD Events on Calendar, Integrate my custom Calendar with Google Calendar
         //TODO: Create Mechanism in order to caching data
         //TODO: Error message on Login/Register form
-        //TODO: Google Calendar
         //TODO: Database Backup, Restore, Delete, Clear, Add/Edit/Delete/Update Table, Add Database
         //TODO: Database Trancate
         //TODO: Docker
+
 
         public static void Main(string[] args)
         {
