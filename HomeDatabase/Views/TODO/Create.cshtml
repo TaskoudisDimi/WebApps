@@ -1,7 +1,7 @@
 ﻿@model TODOViewModel
 
 
-<form method="post" asp-action="Create">
+<form method="post" asp-action="CreateItem">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">
@@ -46,5 +46,21 @@
     </div>
 </form>
 
+<script>
 
+    // Set the userId value in a hidden input field
+    document.querySelector('input[name="UserId"]').value = '13'; // Replace 'yourUserId' with the actual user ID
 
+    const socket = new WebSocket(`ws://localhost:7075/TODO/Create?userId=13`);
+
+    // Event handler for when a message is received
+    socket.onmessage = (event) => {
+        // Handle the received message, e.g., display a notification
+        console.log(`Received notification: ${event.data}`);
+    };
+
+    // Event handler for when the connection is closed
+    socket.onclose = (event) => {
+        console.error(`WebSocket closed: ${event.reason}`);
+    };
+</script>

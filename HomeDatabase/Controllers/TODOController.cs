@@ -15,15 +15,15 @@ namespace HomeDatabase.Controllers
     [Authorize]
     public class TODOController : Controller
     {
-        //private readonly Helpers.WebSocket_Manager _webSocketManager;
+        private readonly Helpers.WebSocket_Manager _webSocketManager;
 
         //private readonly NotificationService _notificationService;
         private static readonly Dictionary<string, string> UserDeviceTokens = new Dictionary<string, string>();
 
-        //public TODOController(Helpers.WebSocket_Manager webSocketManager)
-        //{
-        //    _webSocketManager = webSocketManager;
-        //}
+        public TODOController(Helpers.WebSocket_Manager webSocketManager)
+        {
+            _webSocketManager = webSocketManager;
+        }
 
 
         public IActionResult Index()
@@ -60,7 +60,6 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TODOViewModel todo)
         {
-
             string dateCreated = todo.DateCreated.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             string deliveryDate = todo.DeliveryDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -68,27 +67,13 @@ namespace HomeDatabase.Controllers
             if (SqlConnect.Instance.ExecuteNQ($"Insert Into TODO Values ('{todo.Name}', '{todo.Title}'" +
                 $", '{todo.Description}', '{dateCreated}', '{deliveryDate}', '{todo.Done}', '{userId}')") > 0)
             {
-
-                // Get the current user's Id
-                //var user = await _userManager.GetUserAsync(User);
-                //var userId = user?.Id;
-                //var userId = todo.ID;
-
-                //await _webSocketManager.SendNotificationAsync($"{userId}", "New TODO item created!");
-                //string deviceToken = GetUserDeviceToken(todo.Name); // Implement this method to get the device token
-
-                //if (!string.IsNullOrEmpty(deviceToken))
-                //{
-                //    _notificationService.SendNotificationAsync(deviceToken, "Delivery Reminder", $"Your TODO with ID {todo.ID} is approaching.");
-                //}
-
+                await _webSocketManager.SendNotificationAsync($"{userId}", "New TODO item created!");
                 return RedirectToAction("Index");
             }
             else
             {
                 return NotFound();
             }
-
         }
 
         //Android

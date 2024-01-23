@@ -31,6 +31,8 @@ namespace HomeDatabase
             services.AddControllersWithViews();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<NotificationService>();
+            services.AddSingleton<Helpers.WebSocket_Manager>();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddGoogle(options =>
             {
@@ -81,8 +83,8 @@ namespace HomeDatabase
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            //app.UseMiddleware<WebSocketMiddleware>(new Helpers.WebSocket_Manager());
+            app.UseWebSockets();
+            app.UseMiddleware<WebSocketMiddleware>(new Helpers.WebSocket_Manager());
             app.UseSession();
 
             app.UseEndpoints(endpoints =>

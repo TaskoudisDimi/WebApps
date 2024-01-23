@@ -46,27 +46,3 @@
 
 
 
-
-
-<!-- Add a div to display notifications -->
-<div id="notificationDiv"></div>
-
-<script>
-
-    // Get userId from ViewBag
-    const userId = '@ViewBag.UserId';
-
-    // Create a WebSocket connection
-    const socket = new WebSocket(`ws://${window.location.host}/Todo/Create?userId=yourUserId`);
-
-    // Event handler for when a message is received
-    socket.onmessage = (event) => {
-        const notificationDiv = document.getElementById('notificationDiv');
-        notificationDiv.innerHTML += `<p>${event.data}</p>`;
-    };
-
-    // Event handler for when the connection is closed
-    socket.onclose = (event) => {
-        console.error(`WebSocket closed: ${event.reason}`);
-    };
-</script>
