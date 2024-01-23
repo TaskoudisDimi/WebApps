@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace HomeDatabase.Controllers
 {
@@ -12,7 +13,10 @@ namespace HomeDatabase.Controllers
     {
         public IActionResult Index()
         {
-            DataTable servers = SqlConnect.Instance.SelectDataTable("SELECT ID, FirstName, LastName, Username, Password, Service, encryptionKey FROM Passwords");
+            // Get the ID of the currently authenticated user
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            DataTable servers = SqlConnect.Instance.SelectDataTable("SELECT ID, FirstName, LastName, Username, Password, Service, encryptionKey FROM Passwords" +
+                $" where userID = '{userId}'");
 
             List<PasswordsViewModel> list = new List<PasswordsViewModel>();
 
@@ -41,7 +45,6 @@ namespace HomeDatabase.Controllers
             return View(list);
         }
 
-
         public IActionResult Create()
         {
             return View();
@@ -50,10 +53,11 @@ namespace HomeDatabase.Controllers
         [HttpPost]
         public IActionResult Create(PasswordsViewModel key)
         {
+            // Get the ID of the currently authenticated user
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             string encryptionKey = Utils.GenerateEncryptionKey(256);
-
             if (SqlConnect.Instance.ExecuteNQ($"Insert Into Passwords Values ('{key.FirstName}', '{key.LastName}'" +
-                $", '{key.Username}', '{Utils.EncryptPassword(key.Password, encryptionKey)}', '{key.Service}', '{encryptionKey}')") > 0)
+                $", '{key.Username}', '{Utils.EncryptPassword(key.Password, encryptionKey)}', '{key.Service}', '{encryptionKey}', '{userId}')") > 0)
             {
                 return RedirectToAction("Index");
             }
@@ -127,8 +131,6 @@ namespace HomeDatabase.Controllers
                 return NotFound();
             }
         }
-
-        
 
         public IActionResult Delete(int? id)
         {
