@@ -57,16 +57,16 @@
                 right: 'month,agendaWeek,agendaDay'
             },
             events: [
-    @foreach (var item in Model)
-    {
-        <text>
-                    {
-                        title: '@item.Title',
-                        start: '@item.Date.ToString("yyyy-MM-ddTHH:mm:ss")',
-                        id: @item.Id
-                            },
-        </text>
-    }
+        @foreach (var item in Model)
+        {
+            <text>
+                        {
+                            title: '@item.Title',
+                            start: '@item.Date.ToString("yyyy-MM-ddTHH:mm:ss")',
+                            id: @item.Id
+                                },
+            </text>
+        }
                 ],
             eventClick: function (event) {
                 currentEvent = event;
