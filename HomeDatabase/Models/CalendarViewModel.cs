@@ -1,10 +1,10 @@
 ﻿namespace HomeDatabase.Models
 {
-    public class EventsViewModel
+    public class CalendarViewModel
     {
         public int Id { get; set; }
         
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public DateTime Date { get; set; }
 

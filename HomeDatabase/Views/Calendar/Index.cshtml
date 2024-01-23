@@ -1,5 +1,4 @@
-﻿@model List<EventsViewModel>
-
+﻿@model List<CalendarViewModel>
 
 <!-- FullCalendar CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.css" />
@@ -12,12 +11,44 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.js"></script>
 
 <div>
-    <h1>My Events</h1>
+    <h1>Calendar</h1>
     <div id="calendar"></div>
 </div>
 
+<!-- Add a modal for creating, updating, and deleting events -->
+<div class="modal" tabindex="-1" role="dialog" id="eventModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for event details -->
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Title:</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">Time:</label>
+                        <input type="datetime-local" class="form-control" id="eventTime" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="createEventBtn">Create</button>
+                    <button type="button" class="btn btn-primary" id="updateEventBtn" style="display: none;">Update</button>
+                    <button type="button" class="btn btn-danger" id="deleteEventBtn" style="display: none;">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Your corrected code -->
 <script>
     $(document).ready(function () {
+        var currentEvent;
+
         // Initialize FullCalendar
         $('#calendar').fullCalendar({
             header: {
@@ -25,49 +56,134 @@
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
-            events: @Html.Raw(Json.Serialize(Model)),
+            events: [
+    @foreach (var item in Model)
+    {
+        <text>
+                    {
+                        title: '@item.Title',
+                        start: '@item.Date.ToString("yyyy-MM-ddTHH:mm:ss")',
+                        id: @item.Id
+                            },
+        </text>
+    }
+                ],
             eventClick: function (event) {
-                // Handle event click if needed
-                alert('Event clicked: ' + event.title);
+                currentEvent = event;
+
+                // Open the modal for editing or deleting events
+                $('#eventModal').modal('show');
+
+                // Set the event details in the modal
+                $('#eventTitle').val(event.title);
+                $('#eventTime').val(event.start.format('YYYY-MM-DDTHH:mm:ss'));
+
+                // Show the buttons for editing and deleting events
+                $('#createEventBtn').hide();
+                $('#updateEventBtn').show();
+                $('#deleteEventBtn').show();
+            },
+            dayClick: function (date, jsEvent, view) {
+                currentEvent = null;
+
+                // Open the modal for creating events
+                $('#eventModal').modal('show');
+
+                // Set the date in the modal
+                $('#eventTime').val(date.format());
+
+                // Show the button for creating events
+                $('#createEventBtn').show();
+                $('#updateEventBtn').hide();
+                $('#deleteEventBtn').hide();
+            }
+        });
+
+        // Handle form submission for both editing and creating events
+        $('#eventForm').submit(function (e) {
+            e.preventDefault();
+            // Collect event details from the form
+            var title = $('#eventTitle').val();
+            var time = $('#eventTime').val();
+            // Determine if it's an edit or create operation
+            var url = "/Calendar/CreateEvent";
+            var eventId = currentEvent ? currentEvent.id : null;
+            // Send data to the CalendarController using AJAX
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { eventId: eventId, title: title, time: time },
+                success: function (data) {
+                    // Handle success if needed
+                    $('#calendar').fullCalendar('renderEvent', {
+                        title: title,
+                        start: time,
+                        id: data.eventId // assuming the server sends back the new event ID
+                    });
+                    // Close the modal
+                    $('#eventModal').modal('hide');
+                },
+                error: function (error) {
+                    // Handle error if needed
+                    console.error(error);
+                }
+            });
+        });
+        // Handle update button click
+        $('#updateEventBtn').click(function () {
+            if (currentEvent) {
+                var eventId = currentEvent.id;
+                // Retrieve values from the form
+                var title = $('#eventTitle').val();
+                var time = $('#eventTime').val();
+
+                // Send data to the CalendarController using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/Calendar/UpdateEvent", // Adjust the URL based on your controller
+                    data: { eventId: eventId, title: title, time: time },
+                    success: function (data) {
+                        // Update the event in FullCalendar
+                        currentEvent.title = title;
+                        currentEvent.start = time;
+                        $('#calendar').fullCalendar('updateEvent', currentEvent);
+
+                        // Close the modal
+                        $('#eventModal').modal('hide');
+                    },
+                    error: function (error) {
+                        // Handle error if needed
+                        console.error(error);
+                    }
+                });
+            }
+        });
+        // Handle delete button click
+        $('#deleteEventBtn').click(function () {
+            if (currentEvent) {
+                var eventId = currentEvent.id;
+
+                // Send data to the CalendarController using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/Calendar/DeleteEvent",
+                    data: { eventId: eventId },
+                    success: function (data) {
+                        // Handle success if needed
+                        console.log(data);
+
+                        // Remove the event from FullCalendar
+                        $('#calendar').fullCalendar('removeEvents', eventId);
+
+                        // Close the modal
+                        $('#eventModal').modal('hide');
+                    },
+                    error: function (error) {
+                        // Handle error if needed
+                        console.error(error);
+                    }
+                });
             }
         });
     });
 </script>
-
-
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            @foreach (var myEvent in Model)
-            {
-                <tr>
-                    <td>@myEvent.Id</td>
-                    <td>@myEvent.Name</td>
-                    <td>@myEvent.Date</td>
-                    <td>
-                        <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Edit</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@myEvent.Id" asp-controller="Calendar" asp-route-Name="@myEvent.Name">Delete</a>
-                    </td>
-                </tr>
-            }
-        }
-        
-    </tbody>
-</table>*@
-
-@*<div>
-    <a class="btn btn-primary" asp-action="Create" asp-controller="Calendar">Add</a>
-    <a class="btn btn-secondary" href="@Url.Action("GoBack", "Calendar")">Back</a>
-    <a asp-controller="Home" asp-action="" class="btn btn-secondary" style="width:150px">
-        Back
-    </a>
-    <input asp-controller="File" asp-action="Download" type="submit" value="Download" class="btn btn-primary" />
-</div>*@
