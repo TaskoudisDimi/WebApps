@@ -144,6 +144,7 @@ namespace HomeDatabase.Helpers
                 {
                     if(Utils.VerifyPassword(user.Password, row["Password"].ToString()))
                     {
+                        user_.Id = Convert.ToInt32(row["Id"]);
                         user_.Username = row["Username"].ToString();
                         user_.Email = row["Email"].ToString();
                         user_.Token = row["Token"].ToString();
@@ -161,8 +162,6 @@ namespace HomeDatabase.Helpers
 
 
         }
-
-
 
     }
 }

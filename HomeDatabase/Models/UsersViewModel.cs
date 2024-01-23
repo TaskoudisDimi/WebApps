@@ -26,5 +26,6 @@ namespace HomeDatabase.Models
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
+
     }
 }

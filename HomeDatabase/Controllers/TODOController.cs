@@ -1,29 +1,37 @@
-﻿using HomeDatabase.Database;
+﻿using FirebaseAdmin.Messaging;
+using HomeDatabase.Database;
 using HomeDatabase.Helpers;
 using HomeDatabase.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Globalization;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace HomeDatabase.Controllers
 {
     [Authorize]
     public class TODOController : Controller
     {
+        //private readonly Helpers.WebSocket_Manager _webSocketManager;
 
-        private readonly NotificationService _notificationService;
+        //private readonly NotificationService _notificationService;
         private static readonly Dictionary<string, string> UserDeviceTokens = new Dictionary<string, string>();
 
-        public TODOController(NotificationService notifiService)
-        {
-            _notificationService = notifiService;
-        }
+        //public TODOController(Helpers.WebSocket_Manager webSocketManager)
+        //{
+        //    _webSocketManager = webSocketManager;
+        //}
 
 
         public IActionResult Index()
         {
-            DataTable servers = SqlConnect.Instance.SelectDataTable("SELECT ID, Name, Title, Description, DateCreated, DeliveryDate, Done FROM TODO");
+            // Get the ID of the currently authenticated user
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            DataTable servers = SqlConnect.Instance.SelectDataTable("SELECT ID, Name, Title, Description, DateCreated, DeliveryDate, Done FROM TODO " +
+                                                                    $"where userID = '{userId}'");
             List<TODOViewModel> list = new List<TODOViewModel>();
             foreach (DataRow row in servers.Rows)
             {
@@ -39,6 +47,7 @@ namespace HomeDatabase.Controllers
                 };
                 list.Add(passwordViewModel);
             }
+
             return View(list);
         }
 
@@ -49,24 +58,29 @@ namespace HomeDatabase.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TODOViewModel todo)
+        public async Task<IActionResult> Create(TODOViewModel todo)
         {
 
             string dateCreated = todo.DateCreated.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             string deliveryDate = todo.DeliveryDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (SqlConnect.Instance.ExecuteNQ($"Insert Into TODO Values ('{todo.Name}', '{todo.Title}'" +
-                $", '{todo.Description}', '{dateCreated}', '{deliveryDate}', '{todo.Done}')") > 0)
+                $", '{todo.Description}', '{dateCreated}', '{deliveryDate}', '{todo.Done}', '{userId}')") > 0)
             {
 
+                // Get the current user's Id
+                //var user = await _userManager.GetUserAsync(User);
+                //var userId = user?.Id;
+                //var userId = todo.ID;
 
-                string deviceToken = GetUserDeviceToken(todo.Name); // Implement this method to get the device token
+                //await _webSocketManager.SendNotificationAsync($"{userId}", "New TODO item created!");
+                //string deviceToken = GetUserDeviceToken(todo.Name); // Implement this method to get the device token
 
-                if (!string.IsNullOrEmpty(deviceToken))
-                {
-                    _notificationService.SendNotificationAsync(deviceToken, "Delivery Reminder", $"Your TODO with ID {todo.ID} is approaching.");
-                }
-
+                //if (!string.IsNullOrEmpty(deviceToken))
+                //{
+                //    _notificationService.SendNotificationAsync(deviceToken, "Delivery Reminder", $"Your TODO with ID {todo.ID} is approaching.");
+                //}
 
                 return RedirectToAction("Index");
             }

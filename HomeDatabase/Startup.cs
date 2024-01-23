@@ -82,7 +82,7 @@ namespace HomeDatabase
             app.UseAuthentication();
             app.UseAuthorization();
 
-            
+            //app.UseMiddleware<WebSocketMiddleware>(new Helpers.WebSocket_Manager());
             app.UseSession();
 
             app.UseEndpoints(endpoints =>

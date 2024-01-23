@@ -48,33 +48,44 @@ namespace HomeDatabase.Controllers
         public async Task<IActionResult> LogIn(UsersViewModel user)
         {
             var user_ = authService.ValidateUser(user);
-            if(user_ != null)
+            if (!user.PendingRegistration.Equals(true))
             {
-                bool isAdmin = user_.isAdmin == true ? true : false;
-                var roles = isAdmin ? new[] { "Admin" } : new[] { "User" };
-                var claims = new List<Claim>
+                if (user_ != null)
                 {
-                    new Claim(ClaimTypes.Name, user.Username)
+                    bool isAdmin = user_.isAdmin == true ? true : false;
+                    var roles = isAdmin ? new[] { "Admin" } : new[] { "User" };
+                    var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.NameIdentifier, user_.Id.ToString()),
                 };
-                // Add role claims
-                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                // Assign roles to the user
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties
+                    // Add role claims
+                    claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                    // Assign roles to the user
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddHours(1) // Set the expiration time as needed
+                    });
+                    return RedirectToAction("Index", "Home");
+                }
+                else
                 {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTime.UtcNow.AddHours(1) // Set the expiration time as needed
-                });
-                return RedirectToAction("Index", "Home");
+                    // Handle login failure
+                    ModelState.AddModelError("LoginError", "Invalid username or password.");
+                    return RedirectToAction("Error", "Account", new { loginError = "Invalid username or password." });
+                }
             }
             else
             {
                 // Handle login failure
-                ModelState.AddModelError("LoginError", "Invalid username or password.");
-                return RedirectToAction("Error", "Account", new { loginError = "Invalid username or password." });
+                ModelState.AddModelError("LoginError", "Something went wrong");
+                return RedirectToAction("Error", "Account", new { loginError = "Something went wrong." });
             }
+
         }
 
 

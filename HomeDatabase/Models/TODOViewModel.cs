@@ -19,5 +19,9 @@ namespace HomeDatabase.Models
 
         public bool Done { get; set; }
 
+        public int userID { get; set; }
+
+
+
     }
 }
