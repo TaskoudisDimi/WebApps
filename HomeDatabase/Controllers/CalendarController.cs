@@ -86,7 +86,7 @@ namespace HomeDatabase.Controllers
 
         public IActionResult GoBack()
         {
-            return RedirectToAction("Index", "Databases");
+            return RedirectToAction("Index", "Home");
         }
 
     } 

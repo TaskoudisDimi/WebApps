@@ -142,6 +142,12 @@ namespace HomeDatabase.Database
             return reader;
         }
 
+        static public SqlParameter Param(string name, SqlDbType tp, object val)
+        {
+            SqlParameter p = new SqlParameter(name, tp);
+            p.Value = val;
+            return p;
+        }
 
         public DataTable SelectDataTable(string sql, List<SqlParameter> parameters = null)
         {
