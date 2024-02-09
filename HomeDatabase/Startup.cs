@@ -16,6 +16,11 @@ namespace HomeDatabase
     public class Startup
     {
 
+        //Startup.cs is a class in an ASP.NET Core application that configures the application's request pipeline
+        //and services. It's where you define how the application responds to HTTP requests, what services it uses,
+        //and how it's configured. The ConfigureServices method is used for configuring services
+        //and the Configure method is used for configuring the HTTP request pipeline. 
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,8 +35,10 @@ namespace HomeDatabase
             
             services.AddControllersWithViews();
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<NotificationService>();
-            services.AddSingleton<Helpers.WebSocket_Manager>();
+            // Registers a service as a singleton, meaning that there is only one instance
+            // of the service for the entire application's lifetime.
+            //services.AddSingleton<NotificationService>();
+            //services.AddSingleton<Helpers.WebSocket_Manager>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddGoogle(options =>
@@ -50,10 +57,17 @@ namespace HomeDatabase
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
             });
+
+            //Registers a service as scoped, meaning that a new instance is created once per request.
             services.AddScoped<Authentication_Service>();
             services.AddScoped<GenerateToken>();
             services.AddScoped<EmailService>();
+            //Registers a distributed in-memory cache. This is often used for caching data across multiple server instances in a distributed environment.
             services.AddDistributedMemoryCache();
+            //This code configures the session services. It sets the session timeout to 60 minutes
+            //and configures the session cookie to be marked as essential (which means that the application
+            //might not function properly if the cookie is not present) and HTTP-only (making it inaccessible
+            //to client-side scripts).
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
@@ -85,6 +99,7 @@ namespace HomeDatabase
             app.UseAuthorization();
             app.UseWebSockets();
             app.UseMiddleware<WebSocketMiddleware>(new Helpers.WebSocket_Manager());
+            //This line adds the session middleware to the application pipeline. It enables the usage of session state in your application.
             app.UseSession();
 
             app.UseEndpoints(endpoints =>
