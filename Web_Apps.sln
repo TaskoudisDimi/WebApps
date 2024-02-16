@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Books", "Books\Books.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeDatabase", "HomeDatabase\HomeDatabase.csproj", "{6A8902D3-DE82-4CFC-8F45-C9415E4667E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorApp", "RazorApp\RazorApp.csproj", "{B747C2FC-3CA5-4B59-B851-B5FE1CB6CDEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6A8902D3-DE82-4CFC-8F45-C9415E4667E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A8902D3-DE82-4CFC-8F45-C9415E4667E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A8902D3-DE82-4CFC-8F45-C9415E4667E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B747C2FC-3CA5-4B59-B851-B5FE1CB6CDEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B747C2FC-3CA5-4B59-B851-B5FE1CB6CDEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B747C2FC-3CA5-4B59-B851-B5FE1CB6CDEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B747C2FC-3CA5-4B59-B851-B5FE1CB6CDEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
